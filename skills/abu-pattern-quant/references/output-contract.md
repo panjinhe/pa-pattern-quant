@@ -46,6 +46,8 @@
 - 先写数据准备和列映射，再写特征列，再写模式判定列。
 - 允许用函数包装重复逻辑，但不要直接接回测引擎。
 - 如果阈值未定，代码里用具名常量表达，例如 `DOUBLE_TOP_TOLERANCE_ATR`。
+- 如果用户明确要求落盘脚本，默认生成 `scripts/detect_<pattern>.py`，并把实时检测函数与事后结果标注函数拆开。
+- 任何使用未来 K 线的逻辑都必须显式标注为 outcome/label/validation，不能伪装成实时信号。
 
 推荐结构：
 
@@ -60,6 +62,9 @@ def add_features(df: pl.DataFrame) -> pl.DataFrame:
 
 def detect_pattern(df: pl.DataFrame) -> pl.DataFrame:
     ...
+
+def label_pattern_outcomes(df: pl.DataFrame) -> pl.DataFrame:
+    ...
 ```
 
 ## 6. Plotly 绘图方案
@@ -73,15 +78,6 @@ def detect_pattern(df: pl.DataFrame) -> pl.DataFrame:
 - `需要显示的 hover 字段`
 
 默认以 candlestick 为主图，不要改成抽象说明。
-
-## 7. 验证与风险
-
-至少覆盖：
-
-- 哪些阈值是待验证假设
-- 哪些边界定义仍可能有歧义
-- 应如何用样本做人工抽查
-- 如果该模式在不同市场可能失效，如何切分样本验证
 
 ## 输出风格
 
