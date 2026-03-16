@@ -7,3 +7,8 @@ dependencies = [
     "plotly>=6.6.0",
     "polars>=1.39.0",
 ]
+
+[dependency-groups]
+dev = [
+    "pyyaml>=6.0.3",
+]
