@@ -22,6 +22,7 @@ dist/
 .ipynb_checkpoints/
 outputs/
 rendered/
+data/binance_um_perp/*/*/*-history.parquet
 
 .idea/
 .vscode/
