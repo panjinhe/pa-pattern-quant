@@ -1,0 +1,1076 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>突破案例巡检</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f1e8;
+      --card: #fffdf8;
+      --ink: #1f2328;
+      --muted: #695f51;
+      --line: #d8ccbb;
+      --accent: #7d4f35;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(125, 79, 53, 0.12), transparent 34%),
+        linear-gradient(180deg, #faf6ef 0%, var(--bg) 100%);
+    }
+    main { max-width: 1600px; margin: 0 auto; padding: 32px 24px 48px; }
+    .summary {
+      background: rgba(255, 253, 248, 0.92);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 30px rgba(69, 51, 33, 0.08);
+    }
+    h1, h2 { margin: 0 0 12px; }
+    p { margin: 6px 0; color: var(--muted); }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 18px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(69, 51, 33, 0.08);
+    }
+    .card img {
+      display: block;
+      width: 100%;
+      background: white;
+    }
+    .meta {
+      padding: 16px 18px 18px;
+    }
+    .meta h2 {
+      font-size: 20px;
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="summary">
+      <h1>突破案例巡检</h1>
+      <p>参数版本：baseline</p>
+      <p>案例总数：100 张，按信号家族均衡、时间分散和结构清晰度抽样生成。</p>
+      <p>交易笔数：721，胜率：40.9154% ，期末净值：0.5832</p>
+      <p>图中已连出区间触点、区间边界、突破点和确认点，便于人工巡检 follow-through 与失败突破逻辑。</p>
+    </section>
+    <section class="grid">
+      
+            <article class="card">
+              <img src="breakout-example-001.png" alt="案例 001" loading="lazy">
+              <div class="meta">
+                <h2>#001 上破失败做空</h2>
+                <p>入场：2022-01-11 06:15</p>
+                <p>区间高度：3.20 ATR，方向：short</p>
+                <p>R：0.50，净盈亏：9.44 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-002.png" alt="案例 002" loading="lazy">
+              <div class="meta">
+                <h2>#002 下破后续做空</h2>
+                <p>入场：2022-01-17 15:00</p>
+                <p>区间高度：2.64 ATR，方向：short</p>
+                <p>R：1.80，净盈亏：132.65 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-003.png" alt="案例 003" loading="lazy">
+              <div class="meta">
+                <h2>#003 下破失败做多</h2>
+                <p>入场：2022-01-25 01:45</p>
+                <p>区间高度：4.46 ATR，方向：long</p>
+                <p>R：1.30，净盈亏：69.02 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-004.png" alt="案例 004" loading="lazy">
+              <div class="meta">
+                <h2>#004 上破后续做多</h2>
+                <p>入场：2022-02-12 16:25</p>
+                <p>区间高度：2.73 ATR，方向：long</p>
+                <p>R：1.22，净盈亏：172.30 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-005.png" alt="案例 005" loading="lazy">
+              <div class="meta">
+                <h2>#005 上破后续做多</h2>
+                <p>入场：2022-03-07 12:00</p>
+                <p>区间高度：3.40 ATR，方向：long</p>
+                <p>R：1.80，净盈亏：116.92 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-006.png" alt="案例 006" loading="lazy">
+              <div class="meta">
+                <h2>#006 下破后续做空</h2>
+                <p>入场：2022-03-10 04:25</p>
+                <p>区间高度：2.65 ATR，方向：short</p>
+                <p>R：0.91，净盈亏：110.17 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-007.png" alt="案例 007" loading="lazy">
+              <div class="meta">
+                <h2>#007 下破失败做多</h2>
+                <p>入场：2022-04-07 21:35</p>
+                <p>区间高度：3.68 ATR，方向：long</p>
+                <p>R：0.22，净盈亏：14.84 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-008.png" alt="案例 008" loading="lazy">
+              <div class="meta">
+                <h2>#008 上破失败做空</h2>
+                <p>入场：2022-04-13 00:25</p>
+                <p>区间高度：4.04 ATR，方向：short</p>
+                <p>R：1.27，净盈亏：44.59 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-009.png" alt="案例 009" loading="lazy">
+              <div class="meta">
+                <h2>#009 上破后续做多</h2>
+                <p>入场：2022-05-17 21:40</p>
+                <p>区间高度：4.13 ATR，方向：long</p>
+                <p>R：1.80，净盈亏：136.21 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-010.png" alt="案例 010" loading="lazy">
+              <div class="meta">
+                <h2>#010 下破后续做空</h2>
+                <p>入场：2022-05-23 18:55</p>
+                <p>区间高度：2.34 ATR，方向：short</p>
+                <p>R：1.80，净盈亏：208.89 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-011.png" alt="案例 011" loading="lazy">
+              <div class="meta">
+                <h2>#011 下破后续做空</h2>
+                <p>入场：2022-05-27 14:40</p>
+                <p>区间高度：2.91 ATR，方向：short</p>
+                <p>R：1.80，净盈亏：228.35 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-012.png" alt="案例 012" loading="lazy">
+              <div class="meta">
+                <h2>#012 上破后续做多</h2>
+                <p>入场：2022-06-02 20:20</p>
+                <p>区间高度：3.81 ATR，方向：long</p>
+                <p>R：3.03，净盈亏：118.23 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-013.png" alt="案例 013" loading="lazy">
+              <div class="meta">
+                <h2>#013 上破失败做空</h2>
+                <p>入场：2022-06-10 12:25</p>
+                <p>区间高度：2.99 ATR，方向：short</p>
+                <p>R：0.98，净盈亏：22.77 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-014.png" alt="案例 014" loading="lazy">
+              <div class="meta">
+                <h2>#014 下破失败做多</h2>
+                <p>入场：2022-06-20 05:35</p>
+                <p>区间高度：4.05 ATR，方向：long</p>
+                <p>R：1.24，净盈亏：93.79 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-015.png" alt="案例 015" loading="lazy">
+              <div class="meta">
+                <h2>#015 上破失败做空</h2>
+                <p>入场：2022-08-09 07:25</p>
+                <p>区间高度：3.33 ATR，方向：short</p>
+                <p>R：0.48，净盈亏：25.67 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-016.png" alt="案例 016" loading="lazy">
+              <div class="meta">
+                <h2>#016 上破失败做空</h2>
+                <p>入场：2022-09-03 06:05</p>
+                <p>区间高度：3.02 ATR，方向：short</p>
+                <p>R：0.36，净盈亏：9.60 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-017.png" alt="案例 017" loading="lazy">
+              <div class="meta">
+                <h2>#017 下破后续做空</h2>
+                <p>入场：2022-09-04 06:25</p>
+                <p>区间高度：2.53 ATR，方向：short</p>
+                <p>R：1.80，净盈亏：40.01 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-018.png" alt="案例 018" loading="lazy">
+              <div class="meta">
+                <h2>#018 下破后续做空</h2>
+                <p>入场：2022-09-27 16:05</p>
+                <p>区间高度：3.58 ATR，方向：short</p>
+                <p>R：1.80，净盈亏：163.43 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-019.png" alt="案例 019" loading="lazy">
+              <div class="meta">
+                <h2>#019 下破失败做多</h2>
+                <p>入场：2022-09-29 01:05</p>
+                <p>区间高度：2.27 ATR，方向：long</p>
+                <p>R：0.29，净盈亏：18.14 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-020.png" alt="案例 020" loading="lazy">
+              <div class="meta">
+                <h2>#020 上破失败做空</h2>
+                <p>入场：2022-11-03 21:50</p>
+                <p>区间高度：2.39 ATR，方向：short</p>
+                <p>R：-1.00，净盈亏：-15.48 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-021.png" alt="案例 021" loading="lazy">
+              <div class="meta">
+                <h2>#021 上破后续做多</h2>
+                <p>入场：2022-11-10 12:10</p>
+                <p>区间高度：2.72 ATR，方向：long</p>
+                <p>R：1.80，净盈亏：368.20 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-022.png" alt="案例 022" loading="lazy">
+              <div class="meta">
+                <h2>#022 下破失败做多</h2>
+                <p>入场：2022-12-26 18:15</p>
+                <p>区间高度：3.38 ATR，方向：long</p>
+                <p>R：0.65，净盈亏：5.43 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-023.png" alt="案例 023" loading="lazy">
+              <div class="meta">
+                <h2>#023 上破后续做多</h2>
+                <p>入场：2023-01-11 18:05</p>
+                <p>区间高度：2.86 ATR，方向：long</p>
+                <p>R：0.25，净盈亏：19.08 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-024.png" alt="案例 024" loading="lazy">
+              <div class="meta">
+                <h2>#024 上破失败做空</h2>
+                <p>入场：2023-02-10 23:40</p>
+                <p>区间高度：2.84 ATR，方向：short</p>
+                <p>R：1.30，净盈亏：25.41 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-025.png" alt="案例 025" loading="lazy">
+              <div class="meta">
+                <h2>#025 下破后续做空</h2>
+                <p>入场：2023-02-24 15:50</p>
+                <p>区间高度：4.62 ATR，方向：short</p>
+                <p>R：1.80，净盈亏：162.55 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-026.png" alt="案例 026" loading="lazy">
+              <div class="meta">
+                <h2>#026 上破失败做空</h2>
+                <p>入场：2023-04-01 16:30</p>
+                <p>区间高度：3.04 ATR，方向：short</p>
+                <p>R：1.01，净盈亏：13.12 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-027.png" alt="案例 027" loading="lazy">
+              <div class="meta">
+                <h2>#027 下破失败做多</h2>
+                <p>入场：2023-04-15 06:45</p>
+                <p>区间高度：2.94 ATR，方向：long</p>
+                <p>R：0.71，净盈亏：3.79 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-028.png" alt="案例 028" loading="lazy">
+              <div class="meta">
+                <h2>#028 上破后续做多</h2>
+                <p>入场：2023-04-20 12:30</p>
+                <p>区间高度：3.29 ATR，方向：long</p>
+                <p>R：-0.46，净盈亏：-56.57 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-029.png" alt="案例 029" loading="lazy">
+              <div class="meta">
+                <h2>#029 上破后续做多</h2>
+                <p>入场：2023-04-26 08:25</p>
+                <p>区间高度：3.88 ATR，方向：long</p>
+                <p>R：1.80，净盈亏：84.18 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-030.png" alt="案例 030" loading="lazy">
+              <div class="meta">
+                <h2>#030 下破失败做多</h2>
+                <p>入场：2023-05-13 11:55</p>
+                <p>区间高度：2.80 ATR，方向：long</p>
+                <p>R：-1.00，净盈亏：-13.01 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-031.png" alt="案例 031" loading="lazy">
+              <div class="meta">
+                <h2>#031 上破失败做空</h2>
+                <p>入场：2023-05-16 17:05</p>
+                <p>区间高度：2.27 ATR，方向：short</p>
+                <p>R：0.11，净盈亏：-0.78 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-032.png" alt="案例 032" loading="lazy">
+              <div class="meta">
+                <h2>#032 上破失败做空</h2>
+                <p>入场：2023-05-18 14:35</p>
+                <p>区间高度：2.84 ATR，方向：short</p>
+                <p>R：0.84，净盈亏：14.77 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-033.png" alt="案例 033" loading="lazy">
+              <div class="meta">
+                <h2>#033 下破后续做空</h2>
+                <p>入场：2023-06-11 22:35</p>
+                <p>区间高度：4.74 ATR，方向：short</p>
+                <p>R：0.85，净盈亏：41.16 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-034.png" alt="案例 034" loading="lazy">
+              <div class="meta">
+                <h2>#034 下破失败做多</h2>
+                <p>入场：2023-06-17 04:10</p>
+                <p>区间高度：4.22 ATR，方向：long</p>
+                <p>R：0.97，净盈亏：3.89 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-035.png" alt="案例 035" loading="lazy">
+              <div class="meta">
+                <h2>#035 上破后续做多</h2>
+                <p>入场：2023-06-20 16:40</p>
+                <p>区间高度：5.38 ATR，方向：long</p>
+                <p>R：1.80，净盈亏：108.86 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-036.png" alt="案例 036" loading="lazy">
+              <div class="meta">
+                <h2>#036 下破失败做多</h2>
+                <p>入场：2023-07-28 20:15</p>
+                <p>区间高度：4.02 ATR，方向：long</p>
+                <p>R：1.30，净盈亏：1.08 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-037.png" alt="案例 037" loading="lazy">
+              <div class="meta">
+                <h2>#037 下破后续做空</h2>
+                <p>入场：2023-08-15 04:55</p>
+                <p>区间高度：4.99 ATR，方向：short</p>
+                <p>R：-1.00，净盈亏：-8.50 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-038.png" alt="案例 038" loading="lazy">
+              <div class="meta">
+                <h2>#038 上破失败做空</h2>
+                <p>入场：2023-08-26 03:30</p>
+                <p>区间高度：3.48 ATR，方向：short</p>
+                <p>R：0.20，净盈亏：-1.70 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-039.png" alt="案例 039" loading="lazy">
+              <div class="meta">
+                <h2>#039 上破后续做多</h2>
+                <p>入场：2023-10-14 15:40</p>
+                <p>区间高度：4.13 ATR，方向：long</p>
+                <p>R：1.80，净盈亏：19.21 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-040.png" alt="案例 040" loading="lazy">
+              <div class="meta">
+                <h2>#040 上破失败做空</h2>
+                <p>入场：2023-11-06 04:05</p>
+                <p>区间高度：3.30 ATR，方向：short</p>
+                <p>R：0.08，净盈亏：-1.85 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-041.png" alt="案例 041" loading="lazy">
+              <div class="meta">
+                <h2>#041 下破后续做空</h2>
+                <p>入场：2023-11-19 00:55</p>
+                <p>区间高度：2.99 ATR，方向：short</p>
+                <p>R：1.80，净盈亏：42.66 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-042.png" alt="案例 042" loading="lazy">
+              <div class="meta">
+                <h2>#042 下破失败做多</h2>
+                <p>入场：2023-11-25 18:20</p>
+                <p>区间高度：2.82 ATR，方向：long</p>
+                <p>R：0.93，净盈亏：5.53 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-043.png" alt="案例 043" loading="lazy">
+              <div class="meta">
+                <h2>#043 下破失败做多</h2>
+                <p>入场：2023-11-26 04:25</p>
+                <p>区间高度：2.68 ATR，方向：long</p>
+                <p>R：0.05，净盈亏：-3.25 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-044.png" alt="案例 044" loading="lazy">
+              <div class="meta">
+                <h2>#044 上破失败做空</h2>
+                <p>入场：2023-12-06 10:35</p>
+                <p>区间高度：2.43 ATR，方向：short</p>
+                <p>R：0.72，净盈亏：17.07 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-045.png" alt="案例 045" loading="lazy">
+              <div class="meta">
+                <h2>#045 上破后续做多</h2>
+                <p>入场：2023-12-09 05:00</p>
+                <p>区间高度：4.04 ATR，方向：long</p>
+                <p>R：1.80，净盈亏：41.82 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-046.png" alt="案例 046" loading="lazy">
+              <div class="meta">
+                <h2>#046 上破后续做多</h2>
+                <p>入场：2024-01-01 18:05</p>
+                <p>区间高度：3.07 ATR，方向：long</p>
+                <p>R：1.80，净盈亏：79.74 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-047.png" alt="案例 047" loading="lazy">
+              <div class="meta">
+                <h2>#047 上破后续做多</h2>
+                <p>入场：2024-02-03 00:20</p>
+                <p>区间高度：2.63 ATR，方向：long</p>
+                <p>R：1.80，净盈亏：55.54 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-048.png" alt="案例 048" loading="lazy">
+              <div class="meta">
+                <h2>#048 下破后续做空</h2>
+                <p>入场：2024-02-04 19:00</p>
+                <p>区间高度：4.27 ATR，方向：short</p>
+                <p>R：1.80，净盈亏：52.76 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-049.png" alt="案例 049" loading="lazy">
+              <div class="meta">
+                <h2>#049 上破失败做空</h2>
+                <p>入场：2024-03-07 11:10</p>
+                <p>区间高度：3.03 ATR，方向：short</p>
+                <p>R：0.94，净盈亏：25.55 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-050.png" alt="案例 050" loading="lazy">
+              <div class="meta">
+                <h2>#050 下破失败做多</h2>
+                <p>入场：2024-03-07 21:55</p>
+                <p>区间高度：4.56 ATR，方向：long</p>
+                <p>R：1.30，净盈亏：45.12 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-051.png" alt="案例 051" loading="lazy">
+              <div class="meta">
+                <h2>#051 上破失败做空</h2>
+                <p>入场：2024-03-19 13:00</p>
+                <p>区间高度：4.94 ATR，方向：short</p>
+                <p>R：-1.00，净盈亏：-83.83 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-052.png" alt="案例 052" loading="lazy">
+              <div class="meta">
+                <h2>#052 下破后续做空</h2>
+                <p>入场：2024-04-04 02:20</p>
+                <p>区间高度：3.33 ATR，方向：short</p>
+                <p>R：1.80，净盈亏：81.58 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-053.png" alt="案例 053" loading="lazy">
+              <div class="meta">
+                <h2>#053 下破失败做多</h2>
+                <p>入场：2024-04-06 13:35</p>
+                <p>区间高度：3.71 ATR，方向：long</p>
+                <p>R：0.64，净盈亏：12.53 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-054.png" alt="案例 054" loading="lazy">
+              <div class="meta">
+                <h2>#054 上破后续做多</h2>
+                <p>入场：2024-04-08 07:30</p>
+                <p>区间高度：3.26 ATR，方向：long</p>
+                <p>R：1.80，净盈亏：103.58 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-055.png" alt="案例 055" loading="lazy">
+              <div class="meta">
+                <h2>#055 上破后续做多</h2>
+                <p>入场：2024-04-29 22:25</p>
+                <p>区间高度：3.74 ATR，方向：long</p>
+                <p>R：1.80，净盈亏：88.59 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-056.png" alt="案例 056" loading="lazy">
+              <div class="meta">
+                <h2>#056 上破失败做空</h2>
+                <p>入场：2024-05-05 13:25</p>
+                <p>区间高度：2.26 ATR，方向：short</p>
+                <p>R：0.35，净盈亏：11.60 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-057.png" alt="案例 057" loading="lazy">
+              <div class="meta">
+                <h2>#057 下破失败做多</h2>
+                <p>入场：2024-05-10 05:30</p>
+                <p>区间高度：3.04 ATR，方向：long</p>
+                <p>R：0.04，净盈亏：-2.81 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-058.png" alt="案例 058" loading="lazy">
+              <div class="meta">
+                <h2>#058 上破失败做空</h2>
+                <p>入场：2024-06-09 11:45</p>
+                <p>区间高度：4.09 ATR，方向：short</p>
+                <p>R：-1.00，净盈亏：-16.31 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-059.png" alt="案例 059" loading="lazy">
+              <div class="meta">
+                <h2>#059 下破失败做多</h2>
+                <p>入场：2024-06-16 21:50</p>
+                <p>区间高度：3.01 ATR，方向：long</p>
+                <p>R：0.45，净盈亏：6.48 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-060.png" alt="案例 060" loading="lazy">
+              <div class="meta">
+                <h2>#060 上破后续做多</h2>
+                <p>入场：2024-06-20 04:35</p>
+                <p>区间高度：2.63 ATR，方向：long</p>
+                <p>R：1.80，净盈亏：79.08 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-061.png" alt="案例 061" loading="lazy">
+              <div class="meta">
+                <h2>#061 下破后续做空</h2>
+                <p>入场：2024-06-22 07:10</p>
+                <p>区间高度：2.71 ATR，方向：short</p>
+                <p>R：1.80，净盈亏：32.54 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-062.png" alt="案例 062" loading="lazy">
+              <div class="meta">
+                <h2>#062 上破失败做空</h2>
+                <p>入场：2024-06-29 01:45</p>
+                <p>区间高度：3.89 ATR，方向：short</p>
+                <p>R：1.15，净盈亏：16.72 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-063.png" alt="案例 063" loading="lazy">
+              <div class="meta">
+                <h2>#063 下破失败做多</h2>
+                <p>入场：2024-07-05 20:45</p>
+                <p>区间高度：4.47 ATR，方向：long</p>
+                <p>R：1.05，净盈亏：30.04 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-064.png" alt="案例 064" loading="lazy">
+              <div class="meta">
+                <h2>#064 上破后续做多</h2>
+                <p>入场：2024-08-23 05:10</p>
+                <p>区间高度：2.46 ATR，方向：long</p>
+                <p>R：1.80，净盈亏：103.90 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-065.png" alt="案例 065" loading="lazy">
+              <div class="meta">
+                <h2>#065 下破后续做空</h2>
+                <p>入场：2024-08-27 10:20</p>
+                <p>区间高度：3.71 ATR，方向：short</p>
+                <p>R：0.82，净盈亏：83.95 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-066.png" alt="案例 066" loading="lazy">
+              <div class="meta">
+                <h2>#066 下破失败做多</h2>
+                <p>入场：2024-09-29 13:05</p>
+                <p>区间高度：3.19 ATR，方向：long</p>
+                <p>R：0.84，净盈亏：14.35 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-067.png" alt="案例 067" loading="lazy">
+              <div class="meta">
+                <h2>#067 上破失败做空</h2>
+                <p>入场：2024-10-05 13:00</p>
+                <p>区间高度：2.72 ATR，方向：short</p>
+                <p>R：-1.00，净盈亏：-16.56 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-068.png" alt="案例 068" loading="lazy">
+              <div class="meta">
+                <h2>#068 下破后续做空</h2>
+                <p>入场：2024-10-11 22:05</p>
+                <p>区间高度：2.96 ATR，方向：short</p>
+                <p>R：1.80，净盈亏：43.84 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-069.png" alt="案例 069" loading="lazy">
+              <div class="meta">
+                <h2>#069 上破后续做多</h2>
+                <p>入场：2024-10-18 01:25</p>
+                <p>区间高度：2.84 ATR，方向：long</p>
+                <p>R：-0.05，净盈亏：-7.74 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-070.png" alt="案例 070" loading="lazy">
+              <div class="meta">
+                <h2>#070 下破失败做多</h2>
+                <p>入场：2024-10-20 06:05</p>
+                <p>区间高度：3.56 ATR，方向：long</p>
+                <p>R：0.04，净盈亏：-3.19 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-071.png" alt="案例 071" loading="lazy">
+              <div class="meta">
+                <h2>#071 下破后续做空</h2>
+                <p>入场：2024-11-03 01:15</p>
+                <p>区间高度：3.67 ATR，方向：short</p>
+                <p>R：1.80，净盈亏：52.83 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-072.png" alt="案例 072" loading="lazy">
+              <div class="meta">
+                <h2>#072 上破后续做多</h2>
+                <p>入场：2024-11-16 03:25</p>
+                <p>区间高度：4.22 ATR，方向：long</p>
+                <p>R：1.80，净盈亏：93.09 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-073.png" alt="案例 073" loading="lazy">
+              <div class="meta">
+                <h2>#073 上破失败做空</h2>
+                <p>入场：2024-12-08 07:45</p>
+                <p>区间高度：4.46 ATR，方向：short</p>
+                <p>R：1.30，净盈亏：9.10 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-074.png" alt="案例 074" loading="lazy">
+              <div class="meta">
+                <h2>#074 下破后续做空</h2>
+                <p>入场：2024-12-14 17:35</p>
+                <p>区间高度：3.24 ATR，方向：short</p>
+                <p>R：0.89，净盈亏：42.82 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-075.png" alt="案例 075" loading="lazy">
+              <div class="meta">
+                <h2>#075 下破失败做多</h2>
+                <p>入场：2024-12-18 15:10</p>
+                <p>区间高度：3.55 ATR，方向：long</p>
+                <p>R：0.13，净盈亏：4.36 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-076.png" alt="案例 076" loading="lazy">
+              <div class="meta">
+                <h2>#076 下破后续做空</h2>
+                <p>入场：2025-01-19 08:25</p>
+                <p>区间高度：3.44 ATR，方向：short</p>
+                <p>R：1.80，净盈亏：149.15 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-077.png" alt="案例 077" loading="lazy">
+              <div class="meta">
+                <h2>#077 上破后续做多</h2>
+                <p>入场：2025-01-19 12:50</p>
+                <p>区间高度：3.53 ATR，方向：long</p>
+                <p>R：3.57，净盈亏：161.71 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-078.png" alt="案例 078" loading="lazy">
+              <div class="meta">
+                <h2>#078 上破失败做空</h2>
+                <p>入场：2025-03-03 13:50</p>
+                <p>区间高度：2.86 ATR，方向：short</p>
+                <p>R：0.64，净盈亏：39.19 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-079.png" alt="案例 079" loading="lazy">
+              <div class="meta">
+                <h2>#079 下破后续做空</h2>
+                <p>入场：2025-03-26 02:10</p>
+                <p>区间高度：3.25 ATR，方向：short</p>
+                <p>R：0.60，净盈亏：27.50 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-080.png" alt="案例 080" loading="lazy">
+              <div class="meta">
+                <h2>#080 上破后续做多</h2>
+                <p>入场：2025-04-09 17:30</p>
+                <p>区间高度：2.93 ATR，方向：long</p>
+                <p>R：0.76，净盈亏：419.72 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-081.png" alt="案例 081" loading="lazy">
+              <div class="meta">
+                <h2>#081 下破失败做多</h2>
+                <p>入场：2025-04-11 01:05</p>
+                <p>区间高度：2.53 ATR，方向：long</p>
+                <p>R：0.46，净盈亏：33.67 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-082.png" alt="案例 082" loading="lazy">
+              <div class="meta">
+                <h2>#082 下破失败做多</h2>
+                <p>入场：2025-04-27 20:30</p>
+                <p>区间高度：3.27 ATR，方向：long</p>
+                <p>R：1.30，净盈亏：10.41 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-083.png" alt="案例 083" loading="lazy">
+              <div class="meta">
+                <h2>#083 下破后续做空</h2>
+                <p>入场：2025-05-12 14:25</p>
+                <p>区间高度：2.46 ATR，方向：short</p>
+                <p>R：0.34，净盈亏：61.77 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-084.png" alt="案例 084" loading="lazy">
+              <div class="meta">
+                <h2>#084 下破后续做空</h2>
+                <p>入场：2025-05-17 00:15</p>
+                <p>区间高度：3.51 ATR，方向：short</p>
+                <p>R：0.84，净盈亏：103.04 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-085.png" alt="案例 085" loading="lazy">
+              <div class="meta">
+                <h2>#085 上破失败做空</h2>
+                <p>入场：2025-06-14 13:15</p>
+                <p>区间高度：2.67 ATR，方向：short</p>
+                <p>R：0.18，净盈亏：3.81 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-086.png" alt="案例 086" loading="lazy">
+              <div class="meta">
+                <h2>#086 下破后续做空</h2>
+                <p>入场：2025-07-12 12:15</p>
+                <p>区间高度：3.74 ATR，方向：short</p>
+                <p>R：1.80，净盈亏：67.54 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-087.png" alt="案例 087" loading="lazy">
+              <div class="meta">
+                <h2>#087 上破后续做多</h2>
+                <p>入场：2025-08-10 00:40</p>
+                <p>区间高度：2.82 ATR，方向：long</p>
+                <p>R：1.80，净盈亏：68.75 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-088.png" alt="案例 088" loading="lazy">
+              <div class="meta">
+                <h2>#088 下破失败做多</h2>
+                <p>入场：2025-08-23 08:30</p>
+                <p>区间高度：3.87 ATR，方向：long</p>
+                <p>R：1.28，净盈亏：30.37 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-089.png" alt="案例 089" loading="lazy">
+              <div class="meta">
+                <h2>#089 下破失败做多</h2>
+                <p>入场：2025-09-24 10:30</p>
+                <p>区间高度：3.25 ATR，方向：long</p>
+                <p>R：0.48，净盈亏：7.03 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-090.png" alt="案例 090" loading="lazy">
+              <div class="meta">
+                <h2>#090 上破失败做空</h2>
+                <p>入场：2025-09-25 22:25</p>
+                <p>区间高度：2.76 ATR，方向：short</p>
+                <p>R：0.57，净盈亏：28.23 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-091.png" alt="案例 091" loading="lazy">
+              <div class="meta">
+                <h2>#091 上破后续做多</h2>
+                <p>入场：2025-10-08 16:55</p>
+                <p>区间高度：2.89 ATR，方向：long</p>
+                <p>R：1.80，净盈亏：112.37 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-092.png" alt="案例 092" loading="lazy">
+              <div class="meta">
+                <h2>#092 上破失败做空</h2>
+                <p>入场：2025-10-20 23:05</p>
+                <p>区间高度：3.25 ATR，方向：short</p>
+                <p>R：0.24，净盈亏：2.53 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-093.png" alt="案例 093" loading="lazy">
+              <div class="meta">
+                <h2>#093 下破后续做空</h2>
+                <p>入场：2025-11-03 01:00</p>
+                <p>区间高度：4.62 ATR，方向：short</p>
+                <p>R：2.32，净盈亏：103.09 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-094.png" alt="案例 094" loading="lazy">
+              <div class="meta">
+                <h2>#094 上破后续做多</h2>
+                <p>入场：2025-11-05 12:25</p>
+                <p>区间高度：5.44 ATR，方向：long</p>
+                <p>R：-1.00，净盈亏：-88.81 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-095.png" alt="案例 095" loading="lazy">
+              <div class="meta">
+                <h2>#095 下破失败做多</h2>
+                <p>入场：2025-11-15 04:50</p>
+                <p>区间高度：3.77 ATR，方向：long</p>
+                <p>R：-1.00，净盈亏：-37.53 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-096.png" alt="案例 096" loading="lazy">
+              <div class="meta">
+                <h2>#096 下破后续做空</h2>
+                <p>入场：2025-11-30 23:35</p>
+                <p>区间高度：3.38 ATR，方向：short</p>
+                <p>R：1.80，净盈亏：131.23 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-097.png" alt="案例 097" loading="lazy">
+              <div class="meta">
+                <h2>#097 上破失败做空</h2>
+                <p>入场：2025-12-14 19:00</p>
+                <p>区间高度：3.18 ATR，方向：short</p>
+                <p>R：1.19，净盈亏：28.95 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-098.png" alt="案例 098" loading="lazy">
+              <div class="meta">
+                <h2>#098 下破失败做多</h2>
+                <p>入场：2025-12-21 06:00</p>
+                <p>区间高度：3.26 ATR，方向：long</p>
+                <p>R：1.20，净盈亏：2.42 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-099.png" alt="案例 099" loading="lazy">
+              <div class="meta">
+                <h2>#099 下破后续做空</h2>
+                <p>入场：2026-02-15 17:45</p>
+                <p>区间高度：3.16 ATR，方向：short</p>
+                <p>R：0.24，净盈亏：45.99 USDT</p>
+              </div>
+            </article>
+            
+            <article class="card">
+              <img src="breakout-example-100.png" alt="案例 100" loading="lazy">
+              <div class="meta">
+                <h2>#100 上破后续做多</h2>
+                <p>入场：2026-02-23 09:35</p>
+                <p>区间高度：2.94 ATR，方向：long</p>
+                <p>R：0.51，净盈亏：57.37 USDT</p>
+              </div>
+            </article>
+            
+    </section>
+  </main>
+</body>
+</html>
