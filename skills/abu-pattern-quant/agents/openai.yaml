@@ -1,4 +1,4 @@
 interface:
   display_name: "阿布形态量化"
-  short_description: "把阿布价格行为文档转成代码、策略、运行结果与案例图"
-  default_prompt: "Use $abu-pattern-quant 将这篇阿布价格行为学文档转换为量化定义、检测脚本、策略脚本、运行结果和 Plotly 案例图，并保存到产出目录。"
+  short_description: "把阿布价格行为文档转成代码、回测表现、策略与案例图"
+  default_prompt: "Use $abu-pattern-quant 将这篇阿布价格行为学文档转换为量化定义、检测脚本、策略脚本、回测表现、运行结果和 Plotly 案例图，并保存到产出目录；如果交易机会过少，可做受限参数放宽并对比基线结果。"
