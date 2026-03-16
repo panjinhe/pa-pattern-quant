@@ -1,0 +1,18 @@
+{
+  "breakout_trend": {
+    "trades": 3544,
+    "win_rate": 0.4326,
+    "avg_r": 0.0155,
+    "median_r": -0.1267,
+    "total_r": 54.8466,
+    "avg_bars_held": 11.2
+  },
+  "final_flag_reversal_research": {
+    "trades": 3,
+    "win_rate": 0.6667,
+    "avg_r": 0.1754,
+    "median_r": 0.4512,
+    "total_r": 0.5262,
+    "avg_bars_held": 17.0
+  }
+}

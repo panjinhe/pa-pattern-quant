@@ -1,0 +1,13 @@
+{
+  "rows": 439488,
+  "bull_flag_candidate": 69507,
+  "bear_flag_candidate": 64476,
+  "bull_flag_breakout": 1931,
+  "bear_flag_breakout": 1613,
+  "final_bull_flag_setup": 2210,
+  "final_bear_flag_setup": 1750,
+  "bull_breakout_failed": 13,
+  "bear_breakout_failed": 9,
+  "final_bull_flag_confirmed": 3,
+  "final_bear_flag_confirmed": 0
+}
