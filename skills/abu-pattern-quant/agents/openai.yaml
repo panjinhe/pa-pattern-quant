@@ -1,4 +1,4 @@
 interface:
   display_name: "阿布形态量化"
-  short_description: "把阿布价格行为文档转成量化规则、交易语义与绘图方案"
-  default_prompt: "Use $abu-pattern-quant 将这篇阿布价格行为学文档转换为 Polars 检测逻辑和 Plotly 可视化方案。"
+  short_description: "把阿布价格行为文档转成量化规则、交易策略与绘图方案"
+  default_prompt: "Use $abu-pattern-quant 将这篇阿布价格行为学文档转换为量化定义、交易策略、Polars 检测逻辑和 Plotly 可视化方案。"
