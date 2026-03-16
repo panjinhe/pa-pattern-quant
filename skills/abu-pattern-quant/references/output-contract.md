@@ -16,8 +16,11 @@
     run-report.md
     backtest-summary.json
     plots/
-      <pattern>-example-01.png
-      <pattern>-example-01.html
+      <pattern>-example-001.png
+      <pattern>-example-002.png
+      ...
+      <pattern>-example-100.png
+      <pattern>-examples.html
 ```
 
 最低要求：
@@ -27,7 +30,7 @@
 - 必须有 `strategy_<pattern>.py`
 - 必须有 `run-report.md`
 - 必须有回测表现摘要文件，例如 `backtest-summary.json`
-- 必须有至少 1 张案例图 `png`
+- 默认应有 `100` 张案例图 `png` 供人工巡检；如果命中样本不足 `100` 个，则输出全部可用案例，并在报告中写明实际数量
 
 ## 2. README.md 结构
 
@@ -150,6 +153,7 @@
 - 图表文件路径
 - 图表展示的形态类型
 - 图表对应的时间区间或案例编号
+- 案例图实际生成数量，以及如果少于 `100` 的原因
 
 ### 验证与风险
 
@@ -201,6 +205,8 @@ def build_pattern_strategy(df: pl.DataFrame) -> pl.DataFrame:
 - `需要显示的 hover 字段`
 
 默认以 candlestick 为主图，不要改成抽象说明。
+默认产出 `100` 张案例 `png`，文件名建议使用三位编号，例如 `<pattern>-example-001.png`。
+如果案例很多，优先按“得分排序 + 时间分散抽样”选图，避免 `100` 张图都来自同一小段样本。
 
 ## 5. 运行报告要求
 
