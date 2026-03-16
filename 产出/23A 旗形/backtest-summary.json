@@ -1,0 +1,72 @@
+{
+  "data_path": "E:\\pa-pattern-quant\\data\\binance_um_perp\\ETHUSDT\\5m\\ETHUSDT-5m-history.parquet",
+  "sample_info": {
+    "rows": 439488,
+    "start": "2022-01-01T00:00:00",
+    "end": "2026-03-06T23:55:00"
+  },
+  "fee_slippage_assumption": "双边合计按每边 2 bps 计入，含手续费与滑点",
+  "capital_assumption": "固定名义仓位 10000 USDT，每笔独立，不做复利",
+  "parameter_adjustment_triggered": false,
+  "selected_preset": "baseline",
+  "baseline": {
+    "trade_count": 193,
+    "win_rate": 36.7876,
+    "avg_net_pnl": 1.057656,
+    "total_net_pnl": 204.127664,
+    "avg_r": 0.001768,
+    "total_r": 0.341214,
+    "max_drawdown": -1106.517528,
+    "profit_factor": 1.050285,
+    "long_trades": 82,
+    "short_trades": 111,
+    "preset": "baseline",
+    "detect_config": {
+      "atr_window": 20,
+      "trend_window": 20,
+      "flag_window": 12,
+      "late_flag_window": 20,
+      "sr_window": 60,
+      "failure_lookahead": 8,
+      "range_width_atr": 3.2,
+      "late_range_width_atr": 4.4,
+      "flat_drift_atr": 1.1,
+      "overlap_ratio_min": 0.55,
+      "trend_score_min": 14,
+      "climax_count_min": 5,
+      "breakout_close_pos": 0.62,
+      "breakout_body_ratio_min": 0.45,
+      "sr_tolerance_atr": 0.6,
+      "climax_distance_atr": 1.4
+    },
+    "backtest_config": {
+      "confirm_lookahead": 6,
+      "reentry_buffer_atr": 0.05,
+      "stop_buffer_atr": 0.15,
+      "min_stop_atr": 0.7,
+      "target_r_multiple": 1.5,
+      "target_range_multiplier": 1.0,
+      "max_holding_bars": 36,
+      "cooldown_bars": 6,
+      "fee_bps_per_side": 2.0,
+      "notional_usdt": 10000.0,
+      "min_trades_for_baseline": 20
+    },
+    "detection_summary": {
+      "rows": 439488,
+      "final_bull_flag_setup": 3328,
+      "final_bear_flag_setup": 3308,
+      "final_bull_flag_breakout": 168,
+      "final_bear_flag_breakout": 128,
+      "final_bull_flag_confirmed": 161,
+      "final_bear_flag_confirmed": 126
+    },
+    "ending_nav": 1.020413,
+    "min_nav": 0.889348,
+    "max_drawdown_pct": -10.473682,
+    "signals_path": "E:\\pa-pattern-quant\\产出\\23A 旗形\\signals_baseline.parquet",
+    "trades_path": "E:\\pa-pattern-quant\\产出\\23A 旗形\\trades_baseline.csv",
+    "equity_curve_path": "E:\\pa-pattern-quant\\产出\\23A 旗形\\equity-curve-baseline.csv",
+    "summary_path": "E:\\pa-pattern-quant\\产出\\23A 旗形\\backtest-summary-baseline.json"
+  }
+}
