@@ -22,6 +22,14 @@ class FlagConfig:
     late_trend_score_min: int = 14
 
 
+def read_ohlcv(path: Path) -> pl.DataFrame:
+    """Read OHLCV from csv or parquet."""
+
+    if path.suffix.lower() == ".parquet":
+        return pl.read_parquet(path)
+    return pl.read_csv(path)
+
+
 def prepare_ohlcv(df: pl.DataFrame) -> pl.DataFrame:
     """Normalize raw OHLCV input.
 
@@ -37,6 +45,10 @@ def prepare_ohlcv(df: pl.DataFrame) -> pl.DataFrame:
         exprs.append(pl.from_epoch("timestamp", time_unit="ms").alias("timestamp"))
     if "close_time" in df.columns and df.schema["close_time"] != pl.Datetime:
         exprs.append(pl.from_epoch("close_time", time_unit="ms").alias("close_time"))
+    if "timestamp" in df.columns:
+        exprs.append(pl.col("timestamp").dt.replace_time_zone(None).alias("timestamp"))
+    if "close_time" in df.columns:
+        exprs.append(pl.col("close_time").dt.replace_time_zone(None).alias("close_time"))
 
     float_candidates = [
         "open",
@@ -216,7 +228,12 @@ def label_flag_outcomes(df: pl.DataFrame, config: FlagConfig = FlagConfig()) -> 
 
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Detect flag patterns from OHLCV data.")
-    parser.add_argument("--input", type=Path, required=True, help="Path to CSV file.")
+    parser.add_argument(
+        "--input",
+        type=Path,
+        required=True,
+        help="Path to CSV or Parquet file.",
+    )
     parser.add_argument(
         "--output",
         type=Path,
@@ -255,7 +272,7 @@ def _summarize(df: pl.DataFrame) -> str:
 
 def main() -> None:
     args = _parse_args()
-    df = prepare_ohlcv(pl.read_csv(args.input))
+    df = prepare_ohlcv(read_ohlcv(args.input))
     df = detect_flag(df)
     if args.with_outcomes:
         df = label_flag_outcomes(df)

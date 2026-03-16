@@ -6,10 +6,10 @@ import plotly.graph_objects as go
 import polars as pl
 from plotly.subplots import make_subplots
 
-from detect_flag import FlagConfig, detect_flag, prepare_ohlcv
+from detect_flag import FlagConfig, detect_flag, prepare_ohlcv, read_ohlcv
 
 
-DATA_PATH = Path("data/binance_um_perp/ETHUSDT/5m/ETHUSDT-5m-2026-02.csv")
+DATA_PATH = Path("data/binance_um_perp/ETHUSDT/5m/ETHUSDT-5m-history.parquet")
 OUTPUT_DIR = Path("outputs")
 PNG_PATH = OUTPUT_DIR / "eth-5m-flag-examples.png"
 HTML_PATH = OUTPUT_DIR / "eth-5m-flag-examples.html"
@@ -169,7 +169,7 @@ def add_flag_panel(fig: go.Figure, plot_df: pl.DataFrame, candidate: dict[str, o
 def main() -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    df = prepare_ohlcv(pl.read_csv(DATA_PATH))
+    df = prepare_ohlcv(read_ohlcv(DATA_PATH))
     df = detect_flag(df, config=CONFIG)
 
     bull = pick_candidate(df, "bull")
