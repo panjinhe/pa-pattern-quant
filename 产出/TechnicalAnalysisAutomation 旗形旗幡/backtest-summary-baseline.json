@@ -1,0 +1,57 @@
+{
+  "trade_count": 5801,
+  "win_rate": 41.7169,
+  "avg_net_pnl": -4.37375,
+  "total_net_pnl": -25372.124283,
+  "avg_r": -0.004001,
+  "total_r": -23.212284,
+  "max_drawdown": -27965.305734,
+  "profit_factor": 0.809218,
+  "long_trades": 2956,
+  "short_trades": 2845,
+  "avg_holding_bars": 10.86,
+  "median_holding_bars": 10,
+  "target_hit_count": 232,
+  "target_hit_rate": 3.9993,
+  "bull_flag_trades": 2610,
+  "bear_flag_trades": 2524,
+  "bull_pennant_trades": 346,
+  "bear_pennant_trades": 321,
+  "preset": "baseline",
+  "detect_config": {
+    "order": 10,
+    "hold_multiplier": 1.0,
+    "max_flag_width_ratio": 0.5,
+    "max_flag_height_ratio": 0.75
+  },
+  "backtest_config": {
+    "fee_bps_per_side": 2.0,
+    "notional_usdt": 10000.0,
+    "min_trades_for_baseline": 20,
+    "allow_overlap_samples": true
+  },
+  "detection_summary": {
+    "pattern_count": 5801,
+    "bull_flag": 2610,
+    "bear_flag": 2524,
+    "bull_pennant": 346,
+    "bear_pennant": 321,
+    "target_hit": 232
+  },
+  "patterns_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡\\patterns_baseline.csv",
+  "signals_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡\\signals_baseline.parquet",
+  "trades_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡\\trades_baseline.csv",
+  "equity_curve_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡\\equity-curve-baseline.csv",
+  "detection_summary_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡\\detection-summary-baseline.json",
+  "ending_nav": -1.537212,
+  "min_nav": -1.586652,
+  "max_drawdown_pct": -231.141349,
+  "plot_summary": {
+    "example_count": 100,
+    "per_example_png_glob": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡\\plots\\flags-pennants-example-*.png",
+    "gallery_html_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡\\plots\\flags-pennants-examples.html",
+    "manifest_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡\\plots\\flags-pennants-examples-manifest.csv",
+    "equity_html_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡\\plots\\flags-pennants-equity-curve.html",
+    "equity_png_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡\\plots\\flags-pennants-equity-curve.png"
+  }
+}

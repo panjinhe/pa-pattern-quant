@@ -1,0 +1,57 @@
+{
+  "trade_count": 576,
+  "win_rate": 53.2986,
+  "avg_net_pnl": 10.55707,
+  "total_net_pnl": 6080.872158,
+  "avg_r": 0.037835,
+  "total_r": 21.792715,
+  "max_drawdown": -3944.592187,
+  "profit_factor": 1.13395,
+  "long_trades": 313,
+  "short_trades": 263,
+  "avg_holding_bars": 10.84,
+  "median_holding_bars": 10,
+  "target_hit_count": 34,
+  "target_hit_rate": 5.9028,
+  "bull_flag_trades": 251,
+  "bear_flag_trades": 236,
+  "bull_pennant_trades": 62,
+  "bear_pennant_trades": 27,
+  "preset": "baseline",
+  "detect_config": {
+    "order": 10,
+    "hold_multiplier": 1.0,
+    "max_flag_width_ratio": 0.5,
+    "max_flag_height_ratio": 0.75
+  },
+  "backtest_config": {
+    "fee_bps_per_side": 2.0,
+    "notional_usdt": 10000.0,
+    "min_trades_for_baseline": 20,
+    "allow_overlap_samples": true
+  },
+  "detection_summary": {
+    "pattern_count": 576,
+    "bull_flag": 251,
+    "bear_flag": 236,
+    "bull_pennant": 62,
+    "bear_pennant": 27,
+    "target_hit": 34
+  },
+  "patterns_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡 BTCUSDT 1h\\patterns_baseline.csv",
+  "signals_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡 BTCUSDT 1h\\signals_baseline.parquet",
+  "trades_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡 BTCUSDT 1h\\trades_baseline.csv",
+  "equity_curve_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡 BTCUSDT 1h\\equity-curve-baseline.csv",
+  "detection_summary_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡 BTCUSDT 1h\\detection-summary-baseline.json",
+  "ending_nav": 1.608087,
+  "min_nav": 0.671428,
+  "max_drawdown_pct": -35.898817,
+  "plot_summary": {
+    "example_count": 100,
+    "per_example_png_glob": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡 BTCUSDT 1h\\plots\\flags-pennants-example-*.png",
+    "gallery_html_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡 BTCUSDT 1h\\plots\\flags-pennants-examples.html",
+    "manifest_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡 BTCUSDT 1h\\plots\\flags-pennants-examples-manifest.csv",
+    "equity_html_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡 BTCUSDT 1h\\plots\\flags-pennants-equity-curve.html",
+    "equity_png_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡 BTCUSDT 1h\\plots\\flags-pennants-equity-curve.png"
+  }
+}

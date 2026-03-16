@@ -1,0 +1,76 @@
+{
+  "source_reference": {
+    "url": "https://github.com/neurotrader888/TechnicalAnalysisAutomation/blob/main/flags_pennants.py",
+    "repo_commit": "da99c20bf3d977b639451258cd6cfca9baa1dcc3",
+    "upstream_method": "find_flags_pennants_trendline"
+  },
+  "data_path": "E:\\pa-pattern-quant\\outputs\\flag_refs\\TechnicalAnalysisAutomation\\BTCUSDT3600.csv",
+  "sample_info": {
+    "rows": 43654,
+    "start": "2018-01-08T02:00:00",
+    "end": "2022-12-31T23:00:00"
+  },
+  "fee_slippage_assumption": "双边合计按每边 2 bps 计入，含手续费与滑点",
+  "capital_assumption": "固定名义仓位 10000 USDT，每笔独立计盈亏；默认允许信号样本重叠，以贴近上游脚本的逐样本统计方式，不做资金占用约束。",
+  "r_definition": "R 使用 pole_height_log 归一化，属于结构归一化收益，不是基于硬止损的风险倍数。",
+  "parameter_adjustment_triggered": false,
+  "selected_preset": "baseline",
+  "baseline": {
+    "trade_count": 576,
+    "win_rate": 53.2986,
+    "avg_net_pnl": 10.55707,
+    "total_net_pnl": 6080.872158,
+    "avg_r": 0.037835,
+    "total_r": 21.792715,
+    "max_drawdown": -3944.592187,
+    "profit_factor": 1.13395,
+    "long_trades": 313,
+    "short_trades": 263,
+    "avg_holding_bars": 10.84,
+    "median_holding_bars": 10,
+    "target_hit_count": 34,
+    "target_hit_rate": 5.9028,
+    "bull_flag_trades": 251,
+    "bear_flag_trades": 236,
+    "bull_pennant_trades": 62,
+    "bear_pennant_trades": 27,
+    "preset": "baseline",
+    "detect_config": {
+      "order": 10,
+      "hold_multiplier": 1.0,
+      "max_flag_width_ratio": 0.5,
+      "max_flag_height_ratio": 0.75
+    },
+    "backtest_config": {
+      "fee_bps_per_side": 2.0,
+      "notional_usdt": 10000.0,
+      "min_trades_for_baseline": 20,
+      "allow_overlap_samples": true
+    },
+    "detection_summary": {
+      "pattern_count": 576,
+      "bull_flag": 251,
+      "bear_flag": 236,
+      "bull_pennant": 62,
+      "bear_pennant": 27,
+      "target_hit": 34
+    },
+    "patterns_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡 BTCUSDT 1h\\patterns_baseline.csv",
+    "signals_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡 BTCUSDT 1h\\signals_baseline.parquet",
+    "trades_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡 BTCUSDT 1h\\trades_baseline.csv",
+    "equity_curve_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡 BTCUSDT 1h\\equity-curve-baseline.csv",
+    "detection_summary_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡 BTCUSDT 1h\\detection-summary-baseline.json",
+    "ending_nav": 1.608087,
+    "min_nav": 0.671428,
+    "max_drawdown_pct": -35.898817,
+    "summary_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡 BTCUSDT 1h\\backtest-summary-baseline.json",
+    "plot_summary": {
+      "example_count": 100,
+      "per_example_png_glob": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡 BTCUSDT 1h\\plots\\flags-pennants-example-*.png",
+      "gallery_html_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡 BTCUSDT 1h\\plots\\flags-pennants-examples.html",
+      "manifest_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡 BTCUSDT 1h\\plots\\flags-pennants-examples-manifest.csv",
+      "equity_html_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡 BTCUSDT 1h\\plots\\flags-pennants-equity-curve.html",
+      "equity_png_path": "E:\\pa-pattern-quant\\产出\\TechnicalAnalysisAutomation 旗形旗幡 BTCUSDT 1h\\plots\\flags-pennants-equity-curve.png"
+    }
+  }
+}
