@@ -66,6 +66,14 @@
     "signals_path": "E:\\pa-pattern-quant\\产出\\24A 楔形\\signals_baseline.parquet",
     "trades_path": "E:\\pa-pattern-quant\\产出\\24A 楔形\\trades_baseline.csv",
     "equity_curve_path": "E:\\pa-pattern-quant\\产出\\24A 楔形\\equity-curve-baseline.csv",
-    "summary_path": "E:\\pa-pattern-quant\\产出\\24A 楔形\\backtest-summary-baseline.json"
+    "summary_path": "E:\\pa-pattern-quant\\产出\\24A 楔形\\backtest-summary-baseline.json",
+    "plot_summary": {
+      "example_count": 100,
+      "per_example_png_glob": "E:\\pa-pattern-quant\\产出\\24A 楔形\\plots\\wedge-example-*.png",
+      "gallery_html_path": "E:\\pa-pattern-quant\\产出\\24A 楔形\\plots\\wedge-examples.html",
+      "manifest_path": "E:\\pa-pattern-quant\\产出\\24A 楔形\\plots\\wedge-examples-manifest.csv",
+      "equity_html_path": "E:\\pa-pattern-quant\\产出\\24A 楔形\\plots\\wedge-equity-curve.html",
+      "equity_png_path": "E:\\pa-pattern-quant\\产出\\24A 楔形\\plots\\wedge-equity-curve.png"
+    }
   }
 }

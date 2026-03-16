@@ -84,7 +84,9 @@
 | `trades_baseline.csv` | 基线逐笔交易 |
 | `equity-curve-baseline.csv` | 平仓时点累计净值与回撤序列 |
 | `backtest-summary.json` | 数据范围、参数、信号统计、回测统计 |
-| `plots/wedge-examples.png` | 楔形案例图 |
+| `plots/wedge-example-001.png` ... `plots/wedge-example-100.png` | 按时间分散抽样生成的 100 张楔形案例图 |
+| `plots/wedge-examples.html` | 本地巡检索引页，汇总 100 张案例图 |
+| `plots/wedge-examples-manifest.csv` | 100 张案例图对应的编号、方向、时间与结构分 |
 | `plots/wedge-equity-curve.png` | 净值曲线图 |
 | `run-report.md` | 执行记录、结果摘要、后续建议 |
 
@@ -102,7 +104,8 @@
 | 楔形顶事后 follow-through 数 | `11` |
 | 楔形底事后 follow-through 数 | `10` |
 | 实际回测交易数 | `1,152` |
-| 是否成功生成图表 | 是，含案例图和净值曲线图 |
+| 实际生成案例图数量 | `100` |
+| 是否成功生成图表 | 是，含 100 张案例图、巡检索引页和净值曲线图 |
 | 是否存在运行失败 | 否 |
 
 # 回测表现
@@ -146,15 +149,16 @@
 
 | 图表路径 | 展示内容 | 时间区间 / 案例 |
 | --- | --- | --- |
-| `plots/wedge-examples.png` | 楔形顶 / 楔形底的静态案例图 | 含 1 个空头案例和 1 个多头案例 |
-| `plots/wedge-examples.html` | 同一组案例的交互图 | 含 1 个空头案例和 1 个多头案例 |
+| `plots/wedge-example-001.png` ... `plots/wedge-example-100.png` | 100 张单独案例图，按多空均衡与时间分散抽样生成 | 覆盖 `2022-01-21 18:10` 到 `2026-02-27 22:40` |
+| `plots/wedge-examples.html` | 本地巡检索引页，汇总上述 100 张 PNG | 便于人工连续翻阅 |
+| `plots/wedge-examples-manifest.csv` | 100 张案例图的编号、方向、时间、盈亏与结构分清单 | 对应全部 100 张样本 |
 | `plots/wedge-equity-curve.png` | 策略净值曲线与回撤静态图 | 全样本 `1,152` 笔交易 |
 | `plots/wedge-equity-curve.html` | 策略净值曲线与回撤交互图 | 全样本 `1,152` 笔交易 |
 
 案例说明：
 
-- 案例 1：`2024-05-07 09:50` 空头入场，来源于楔形顶后的向下触发。
-- 案例 2：`2022-06-14 22:10` 多头入场，来源于楔形底后的向上触发。
+- 本次默认输出 `100` 张案例图，目录下文件名采用三位编号，便于按编号巡检。
+- 选图优先兼顾多空均衡、全样本时间分散和结构典型性；每张图的时间与统计明细见 `plots/wedge-examples-manifest.csv`。
 
 # 验证与风险
 

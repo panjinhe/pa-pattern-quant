@@ -51,5 +51,13 @@
   },
   "ending_nav": 0.918068,
   "min_nav": 0.552746,
-  "max_drawdown_pct": -44.833178
+  "max_drawdown_pct": -44.833178,
+  "plot_summary": {
+    "example_count": 100,
+    "per_example_png_glob": "E:\\pa-pattern-quant\\产出\\24A 楔形\\plots\\wedge-example-*.png",
+    "gallery_html_path": "E:\\pa-pattern-quant\\产出\\24A 楔形\\plots\\wedge-examples.html",
+    "manifest_path": "E:\\pa-pattern-quant\\产出\\24A 楔形\\plots\\wedge-examples-manifest.csv",
+    "equity_html_path": "E:\\pa-pattern-quant\\产出\\24A 楔形\\plots\\wedge-equity-curve.html",
+    "equity_png_path": "E:\\pa-pattern-quant\\产出\\24A 楔形\\plots\\wedge-equity-curve.png"
+  }
 }

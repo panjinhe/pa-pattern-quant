@@ -86,15 +86,17 @@
 | `signals_baseline.parquet` | 基线信号与标签数据 |
 | `trades_baseline.csv` | 基线逐笔交易 |
 | `equity-curve-baseline.csv` | 按平仓时点累计的净值与回撤序列 |
-| `plots/wedge-examples.png` | 静态案例图 |
-| `plots/wedge-examples.html` | 交互案例图 |
+| `plots/wedge-example-001.png` ... `plots/wedge-example-100.png` | 100 张单独案例图 |
+| `plots/wedge-examples.html` | 本地巡检索引页，汇总 100 张案例图 |
+| `plots/wedge-examples-manifest.csv` | 100 张案例图的编号、方向、时间与结构分 |
 | `plots/wedge-equity-curve.png` | 净值曲线静态图 |
 | `plots/wedge-equity-curve.html` | 净值曲线交互图 |
 
-案例图对应样本：
+案例图输出说明：
 
-- 空头案例：`2024-05-07 09:50` 入场，展示楔形顶后的向下触发。
-- 多头案例：`2022-06-14 22:10` 入场，展示楔形底后的向上触发。
+- 本次已实际生成 `100` 张案例 PNG，文件位于 `plots/wedge-example-001.png` 到 `plots/wedge-example-100.png`。
+- 选图规则为“多空均衡 + 时间分散 + 结构分优先”，覆盖区间从 `2022-01-21 18:10` 到 `2026-02-27 22:40`。
+- 每张图的方向、入场时间、盈亏和结构分明细见 `plots/wedge-examples-manifest.csv`。
 
 # 失败原因和下一步建议
 
