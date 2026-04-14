@@ -35,7 +35,7 @@
     "concept_id": "close_chase_entry",
     "strategy_name_zh": "收线市价追进",
     "strategy_name_en": "Close Chase Entry",
-    "status": "planned",
+    "status": "implemented",
     "priority": "很高",
     "style": "左侧",
     "min_dependency": 4,
@@ -47,7 +47,7 @@
     "core_required_concepts": 4,
     "confirmation_concepts": 3,
     "management_support_concepts": 2,
-    "module_path": null,
+    "module_path": "strategylets.close_chase_entry",
     "source_refs": [
       "太妃 策略书 3369885bafd080708125d1637a352a13.csv",
       "太妃 策略书 3369885bafd080708125d1637a352a13_all.csv"
@@ -61,7 +61,7 @@
     "concept_id": "inverse1_fail_forward1_success",
     "strategy_name_zh": "逆一失败，顺一成功",
     "strategy_name_en": "Inverse 1 Fail Forward 1 Success",
-    "status": "planned",
+    "status": "implemented",
     "priority": "很高",
     "style": "右侧",
     "min_dependency": 5,
@@ -73,7 +73,7 @@
     "core_required_concepts": 5,
     "confirmation_concepts": 3,
     "management_support_concepts": 2,
-    "module_path": null,
+    "module_path": "strategylets.inverse1_fail_forward1_success",
     "source_refs": [
       "太妃 策略书 3369885bafd080708125d1637a352a13.csv",
       "太妃 策略书 3369885bafd080708125d1637a352a13_all.csv"
@@ -87,7 +87,7 @@
     "concept_id": "ema20_gap_touch_fail",
     "strategy_name_zh": "20 均线缺口",
     "strategy_name_en": "EMA20 Gap Touch Failure",
-    "status": "planned",
+    "status": "implemented",
     "priority": "很高",
     "style": "右侧",
     "min_dependency": 5,
@@ -99,7 +99,7 @@
     "core_required_concepts": 4,
     "confirmation_concepts": 3,
     "management_support_concepts": 2,
-    "module_path": null,
+    "module_path": "strategylets.ema20_gap_touch_fail",
     "source_refs": [
       "太妃 策略书 3369885bafd080708125d1637a352a13.csv",
       "太妃 策略书 3369885bafd080708125d1637a352a13_all.csv"
