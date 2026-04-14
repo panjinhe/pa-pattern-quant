@@ -14,6 +14,7 @@ export type ConceptKind =
   | "risk";
 
 export type Direction = "bullish" | "bearish" | "both" | "neutral";
+export type SnapshotStatus = "complete" | "degraded";
 
 export type EventStage =
   | "context"
@@ -89,6 +90,36 @@ export interface TradePlan {
   target_prices: number[];
   timeout_bars?: number | null;
   invalidation_rule?: string | null;
+  tags: string[];
+}
+
+export interface OpportunityCandidate {
+  candidate_id: string;
+  run_id: string;
+  spec_id: string;
+  concept_id: string;
+  symbol: string;
+  timeframe: string;
+  signal_bar_time: string;
+  side: "long" | "short";
+  setup_type: string;
+  entry_type: string;
+  entry_zone_low: number;
+  entry_zone_high: number;
+  stop_price: number;
+  take_profit_prices: number[];
+  invalidation_price?: number | null;
+  score: number;
+  score_band: "A" | "B" | "C";
+  candidate_tier: "primary" | "secondary";
+  hard_gates: string[];
+  strengtheners: string[];
+  cautions: string[];
+  analysis_summary: string;
+  key_points: KeyPoint[];
+  overlays: Overlay[];
+  snapshot_status: SnapshotStatus;
+  realtime_safe: boolean;
   tags: string[];
 }
 

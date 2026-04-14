@@ -14,6 +14,7 @@ ConceptLayer: TypeAlias = Literal[
 
 ConceptKind: TypeAlias = Literal["concept", "family", "state", "signal", "pattern", "risk"]
 Direction: TypeAlias = Literal["bullish", "bearish", "both", "neutral"]
+SnapshotStatus: TypeAlias = Literal["complete", "degraded"]
 EventStage: TypeAlias = Literal[
     "context",
     "candidate",
@@ -107,6 +108,39 @@ class TradePlan:
     target_prices: list[float] = field(default_factory=list)
     timeout_bars: int | None = None
     invalidation_rule: str | None = None
+    tags: list[str] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
+class OpportunityCandidate:
+    """直播规则层候选对象。"""
+
+    candidate_id: str
+    run_id: str
+    spec_id: str
+    concept_id: str
+    symbol: str
+    timeframe: str
+    signal_bar_time: str
+    side: Literal["long", "short"]
+    setup_type: str
+    entry_type: str
+    entry_zone_low: float
+    entry_zone_high: float
+    stop_price: float
+    take_profit_prices: list[float] = field(default_factory=list)
+    invalidation_price: float | None = None
+    score: int = 0
+    score_band: str = "C"
+    candidate_tier: Literal["primary", "secondary"] = "secondary"
+    hard_gates: list[str] = field(default_factory=list)
+    strengtheners: list[str] = field(default_factory=list)
+    cautions: list[str] = field(default_factory=list)
+    analysis_summary: str = ""
+    key_points: list["KeyPoint"] = field(default_factory=list)
+    overlays: list["Overlay"] = field(default_factory=list)
+    snapshot_status: SnapshotStatus = "complete"
+    realtime_safe: bool = True
     tags: list[str] = field(default_factory=list)
 
 

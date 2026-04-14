@@ -15,7 +15,7 @@
 - 模式检测结果和前端展示结果分离，但两者共用同一事件主键。
 - 前端不自己推导几何结构，后端直接返回关键点、线段、区域。
 
-## 建议拆成 4 个对象
+## 建议拆成 5 个对象
 
 ### 1. `ConceptSpec`
 
@@ -77,6 +77,21 @@
 - 回测统计
 - 事件列表
 
+### 5. `OpportunityCandidate`
+
+直播规则层对象，定义“这个 setup 现在值不值得进入下游精筛/展示”。
+
+适合承接：
+
+- `opportunity_candidate`
+- 买卖方向
+- 入场区间
+- 止损/目标位
+- 成立条件命中
+- 加强条件
+- 谨慎信号
+- 前端图层
+
 ## 为什么这样拆
 
 如果只定义一个“大接口”，后面会很快混乱：
@@ -85,7 +100,7 @@
 - 检测输出会和回测输出混在一起。
 - 前端会被迫知道“楔形”和“双顶双底”的内部差异。
 
-拆成 `ConceptSpec -> QuantSpec -> QuantEvent -> QuantRun` 后，职责就稳定了。
+拆成 `ConceptSpec -> QuantSpec -> QuantEvent -> QuantRun -> OpportunityCandidate` 后，职责就稳定了。
 
 ## 和当前仓库的对应关系
 
@@ -109,6 +124,7 @@
 taxonomy(语义母表)
   -> quant spec(某个概念的量化实现)
   -> detect(生成事件)
+  -> score/build candidate(补候选层口径)
   -> label/backtest(补 outcome 和交易结果)
   -> visualization payload(补前端图层)
   -> frontend render
@@ -147,6 +163,7 @@ taxonomy(语义母表)
 ### 策略脚本只负责
 
 - 从 `QuantEvent` 生成 `TradePlan`
+- 从 `QuantEvent`/评分结果生成 `OpportunityCandidate`
 - 运行回测
 - 回填 `OutcomeLabel`
 - 生成 `QuantRun.summary`
