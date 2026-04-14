@@ -17,6 +17,19 @@
 - 默认运行脚本并产出完整交付目录，而不只是返回一段文字总结。
 - 输出信号统计、回测表现、案例图和净值曲线，便于快速判断形态是否具备研究价值。
 
+此外，仓库现在还有一个更贴近直播项目的新 skill：
+
+- `skills/text-to-live-strategy/`
+
+它不再只面向“单篇文档 -> 研究样例”，而是把 PRD、CSV、字幕、课程文字、历史策略样例统一收束成：
+
+- `strategylets/` 标准策略模块
+- `strategylets/registry.json` 元数据
+- `QuantSpec / QuantEvent / QuantRun / OpportunityCandidate`
+- `产出/标准策略/<spec_id>/<run_id>/` 下的回测、图表和 README
+
+适合“把文字材料固定成直播规则层产物，再为后续 Trading Graph / TA Agent / Narration 消费”这类任务。
+
 ## 默认交付物
 
 当用这个 skill 处理一篇课程文档时，默认会在 `产出/<文档名>/` 下生成类似结果：
@@ -125,6 +138,20 @@ skill 会默认：
 - 生成检测/策略/绘图脚本
 - 运行脚本
 - 产出报告、图表、回测摘要
+
+如果目标不是研究样例，而是要把文字材料直接标准化成直播候选对象和 `strategylets` 模块，可以改用：
+
+```text
+[$text-to-live-strategy](E:\pa-pattern-quant\skills\text-to-live-strategy\SKILL.md) AI Agent 数字人交易 PRD 3419885bafd0808bb0eee9907cc4c69f.md
+```
+
+或：
+
+```text
+[$text-to-live-strategy](E:\pa-pattern-quant\skills\text-to-live-strategy\SKILL.md) 太妃 策略书 3369885bafd080708125d1637a352a13_all.csv
+```
+
+这个 skill 会优先把输入整理为命名一致的策略元数据、标准 `strategylets` 模块，以及直播可直接消费的 `OpportunityCandidate` 产物。
 
 ## 当前项目状态
 

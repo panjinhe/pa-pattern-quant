@@ -1,0 +1,4 @@
+interface:
+  display_name: "文本转直播策略"
+  short_description: "把 PRD、字幕、策略表转成直播可消费的标准策略产物"
+  default_prompt: "Use $text-to-live-strategy 将这份 PRD、CSV、字幕或课程文字材料转换为直播可消费的标准化策略产物，落到 strategylets、registry 与 产出/标准策略，并补齐 README、回测和图表。"
