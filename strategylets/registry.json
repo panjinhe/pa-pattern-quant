@@ -315,5 +315,32 @@
       "太妃 策略书 3369885bafd080708125d1637a352a13.csv",
       "太妃 策略书 3369885bafd080708125d1637a352a13_all.csv"
     ]
+  },
+  {
+    "strategy_seq": "001",
+    "strategy_code": "other_ytb_001",
+    "strategy_name_std": "other_ytb_001_趋势线突破",
+    "spec_id": "trendline_breakout-v1-eth-5m",
+    "concept_id": "trendline_breakout",
+    "strategy_name_zh": "趋势线突破",
+    "strategy_name_en": "Trendline Breakout",
+    "status": "implemented",
+    "priority": "中高",
+    "style": "右侧",
+    "min_dependency": 4,
+    "target_profit_leg": "趋势线边界突破后的测量移动",
+    "strategy_positioning": "多次测试趋势线后的确认突破",
+    "market_phase": "通道 / 趋势延续",
+    "quant_difficulty": "中",
+    "subjective_ratio_pct": 20,
+    "core_required_concepts": 4,
+    "confirmation_concepts": 3,
+    "management_support_concepts": 2,
+    "module_path": "strategylets.other_ytb_001_trendline_breakout",
+    "source_refs": [
+      "产出/趋势线识别/detect_trendline.py",
+      "产出/趋势线识别/strategy_trendline.py",
+      "产出/趋势线识别/README.md"
+    ]
   }
 ]
