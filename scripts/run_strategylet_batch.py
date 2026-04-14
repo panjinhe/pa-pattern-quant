@@ -21,13 +21,17 @@ def load_registry(path: Path = REGISTRY_PATH) -> list[dict[str, Any]]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _display_name(item: dict[str, Any]) -> str:
+    return item.get("strategy_name_std") or item.get("strategy_name_zh") or item["spec_id"]
+
+
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="批量运行标准化 strategylets。")
     parser.add_argument(
         "--spec",
         action="append",
         dest="spec_ids",
-        help="指定要运行的 spec_id；可重复传入多个。",
+        help="指定要运行的 spec_id 或 strategy_code；可重复传入多个。",
     )
     parser.add_argument(
         "--implemented-only",
@@ -76,8 +80,20 @@ def _pick_specs(registry: list[dict[str, Any]], args: argparse.Namespace) -> lis
 
     if args.spec_ids:
         wanted = set(args.spec_ids)
-        picked = [item for item in registry if item["spec_id"] in wanted]
-        missing = sorted(wanted - {item["spec_id"] for item in picked})
+        picked = [
+            item
+            for item in registry
+            if item["spec_id"] in wanted or item.get("strategy_code") in wanted
+        ]
+        matched_keys = {
+            item["spec_id"]
+            for item in picked
+        } | {
+            item.get("strategy_code")
+            for item in picked
+            if item.get("strategy_code")
+        }
+        missing = sorted(wanted - matched_keys)
         if missing:
             raise SystemExit(f"未在 registry 中找到这些 spec_id: {', '.join(missing)}")
         return picked
@@ -94,7 +110,12 @@ def main() -> None:
 
     if args.list:
         for item in registry:
-            print(f"{item['status']:<12} {item['spec_id']}  {item['strategy_name_zh']}")
+            print(
+                f"{item['status']:<12} "
+                f"{item.get('strategy_code', '-'):>14}  "
+                f"{item['spec_id']}  "
+                f"{_display_name(item)}"
+            )
         return
 
     specs = _pick_specs(registry, args)

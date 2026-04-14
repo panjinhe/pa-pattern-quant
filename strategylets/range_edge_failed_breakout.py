@@ -47,6 +47,9 @@ from quant_interface import (  # noqa: E402
 SPEC_ID = "range_edge_failed_breakout-v1-btc-5m"
 CONCEPT_ID = "range_edge_failed_breakout"
 TITLE_ZH = "看衰区间边线突破"
+DEFAULT_STRATEGY_SEQ = "001"
+DEFAULT_STRATEGY_CODE = "PA_taifei_001"
+DEFAULT_STRATEGY_NAME_STD = f"{DEFAULT_STRATEGY_CODE}_{TITLE_ZH}"
 
 
 @dataclass(frozen=True)
@@ -85,7 +88,7 @@ class BacktestConfig:
     second_target_fraction: float = 0.25
     max_holding_bars: int = 24
     cooldown_bars: int = 1
-    fee_bps_per_side: float = 2.0
+    fee_bps_round_trip: float = 2.0
     notional_usdt: float = 10_000.0
 
 
@@ -105,6 +108,17 @@ def _coerce_backtest_config(
     if isinstance(params, BacktestConfig):
         return params
     return BacktestConfig(**params)
+
+
+def _strategy_meta(registry_entry: dict[str, Any] | None = None) -> dict[str, str]:
+    return {
+        "strategy_seq": str((registry_entry or {}).get("strategy_seq", DEFAULT_STRATEGY_SEQ)),
+        "strategy_code": str((registry_entry or {}).get("strategy_code", DEFAULT_STRATEGY_CODE)),
+        "strategy_name_std": str(
+            (registry_entry or {}).get("strategy_name_std", DEFAULT_STRATEGY_NAME_STD)
+        ),
+        "strategy_name_zh": str((registry_entry or {}).get("strategy_name_zh", TITLE_ZH)),
+    }
 
 
 def read_ohlcv(path: Path) -> pl.DataFrame:
@@ -541,6 +555,19 @@ def _make_key_point(
     )
 
 
+def _point_display_label(role: str) -> str:
+    mapping = {
+        "resistance_touch_1": "R1",
+        "resistance_touch_2": "R2",
+        "resistance_touch_3": "R3",
+        "breakout": "上破",
+        "reentry": "回区",
+        "signal": "确认",
+        "target_mid": "中轴",
+    }
+    return mapping.get(role, role)
+
+
 def _make_segment_overlay(
     overlay_id: str,
     role: str,
@@ -751,6 +778,7 @@ def score(
                 "analysis_summary": summary,
                 "tags": [
                     CONCEPT_ID,
+                    DEFAULT_STRATEGY_CODE,
                     "range",
                     "failed_breakout",
                     "reversion",
@@ -898,6 +926,7 @@ def build_candidates(
 
     rows_by_idx = _index_rows(df)
     scored_records: list[dict[str, Any]] = run_ctx["scored_records"]
+    strategy_meta: dict[str, str] = run_ctx.get("strategy_meta", _strategy_meta())
     candidates: list[OpportunityCandidate] = []
     events: list[QuantEvent] = []
     dedupe_keys: set[tuple[str, str, str, str, str]] = set()
@@ -934,15 +963,14 @@ def build_candidates(
             family="range_failed_breakout",
             features={
                 "hard_gate_pass": record["hard_gate_pass"],
-                    "hard_gates": record["hard_gates"],
-                    "strengtheners": record["strengtheners"],
-                    "cautions": record["cautions"],
-                    "route": record["route"],
-                    "hard_gate_pass": record["hard_gate_pass"],
-                    "range_height_atr": record["range_height_atr"],
-                    "breakout_depth_atr": record["breakout_depth_atr"],
-                    "space_to_mid_r": round(record["space_to_mid_r"], 4),
-                },
+                "hard_gates": record["hard_gates"],
+                "strengtheners": record["strengtheners"],
+                "cautions": record["cautions"],
+                "route": record["route"],
+                "range_height_atr": record["range_height_atr"],
+                "breakout_depth_atr": record["breakout_depth_atr"],
+                "space_to_mid_r": round(record["space_to_mid_r"], 4),
+            },
             key_points=key_points,
             overlays=overlays,
             trade_plan=trade_plan,
@@ -950,6 +978,8 @@ def build_candidates(
             tags=record["tags"],
             meta={
                 "candidate_id": record["candidate_id"],
+                "strategy_code": strategy_meta["strategy_code"],
+                "strategy_name_std": strategy_meta["strategy_name_std"],
                 "score_band": record["score_band"],
                 "snapshot_status": record["snapshot_status"],
                 "signal_idx": record["signal_idx"],
@@ -1073,7 +1103,7 @@ def label_outcomes(
         pnl_r = (entry_price - exit_price) / risk_per_unit
 
         quantity = backtest_config.notional_usdt / max(entry_price, 1e-9)
-        fee_rate = backtest_config.fee_bps_per_side / 10_000.0
+        fee_rate = (backtest_config.fee_bps_round_trip / 2.0) / 10_000.0
         gross_pnl = (entry_price - exit_price) * quantity
         fees = quantity * (entry_price + exit_price) * fee_rate
         net_pnl = gross_pnl - fees
@@ -1120,11 +1150,12 @@ def label_outcomes(
 def build_quant_spec(
     registry_entry: dict[str, Any] | None = None,
 ) -> QuantSpec:
+    strategy_meta = _strategy_meta(registry_entry)
     return QuantSpec(
         spec_id=SPEC_ID,
         concept_id=CONCEPT_ID,
         version="v1",
-        title=TITLE_ZH,
+        title=strategy_meta["strategy_name_std"],
         input_columns=[
             "timestamp",
             "open",
@@ -1165,6 +1196,7 @@ def build_quant_spec(
         params={
             **asdict(FailedBreakoutConfig()),
             "backtest": asdict(BacktestConfig()),
+            "strategy_meta": strategy_meta,
             "registry_entry": registry_entry or {},
         },
         detector=DetectorBinding(
@@ -1463,6 +1495,7 @@ def _plot_event(
     event: QuantEvent,
     output_path: Path,
 ) -> None:
+    strategy_name_std = str(event.meta.get("strategy_name_std", DEFAULT_STRATEGY_NAME_STD))
     signal_idx = int(event.meta["signal_idx"])
     start_idx = max(0, signal_idx - 80)
     end_idx = min(df.height - 1, signal_idx + 40)
@@ -1534,18 +1567,69 @@ def _plot_event(
                 )
             )
 
-    for point in event.key_points:
+    offsets = [(0, 14), (0, -18), (18, 12), (-18, 12), (18, -18), (-18, -18)]
+    for idx, point in enumerate(event.key_points):
         point_time = datetime.fromisoformat(point.timestamp)
         point_x = mdates.date2num(point_time)
         ax.scatter(point_x, point.price, s=35, color="#34495e", zorder=4)
-        ax.text(point_x, point.price, point.role, fontsize=9, ha="center", va="bottom")
+        dx, dy = offsets[idx % len(offsets)]
+        ax.annotate(
+            _point_display_label(point.role),
+            xy=(point_x, point.price),
+            xytext=(dx, dy),
+            textcoords="offset points",
+            ha="center",
+            va="bottom" if dy >= 0 else "top",
+            fontsize=8.5,
+            color="#1f2328",
+            bbox={
+                "boxstyle": "round,pad=0.18",
+                "facecolor": "white",
+                "edgecolor": "#d0d7de",
+                "alpha": 0.9,
+            },
+            arrowprops={
+                "arrowstyle": "-",
+                "color": "#7f8c8d",
+                "linewidth": 0.8,
+                "alpha": 0.7,
+            },
+        )
 
-    ax.set_title(f"{TITLE_ZH} | {event.detected_at}")
+    trade_plan = event.trade_plan
+    summary_lines = [
+        f"方向: {'做空' if trade_plan and trade_plan.direction == 'bearish' else event.direction}",
+        f"评分: {float(event.score or 0.0):.0f} / {event.meta.get('score_band', '-')}",
+        f"入场区: {float(event.meta.get('entry_zone_low', 0.0)):.2f} ~ {float(event.meta.get('entry_zone_high', 0.0)):.2f}",
+        f"止损: {float(trade_plan.stop_price if trade_plan and trade_plan.stop_price is not None else 0.0):.2f}",
+        f"目标1: {float(trade_plan.target_prices[0] if trade_plan and trade_plan.target_prices else 0.0):.2f}",
+    ]
+    if event.outcome is not None:
+        summary_lines.append(f"结果: {event.outcome.outcome_class}")
+        summary_lines.append(f"R: {float(event.outcome.pnl_r or 0.0):.2f}")
+    fig.text(
+        0.84,
+        0.86,
+        "\n".join(summary_lines),
+        ha="left",
+        va="top",
+        fontsize=9,
+        color="#1f2328",
+        bbox={
+            "boxstyle": "round,pad=0.35",
+            "facecolor": "#fffdf8",
+            "edgecolor": "#d8ccbb",
+            "alpha": 0.96,
+        },
+    )
+
+    ax.set_title(f"{strategy_name_std} | {event.detected_at}")
     ax.set_ylabel("价格")
+    ax.set_xlabel("时间")
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%m-%d %H:%M"))
     ax.grid(True, linestyle="--", alpha=0.25)
     fig.autofmt_xdate()
-    fig.tight_layout()
+    fig.tight_layout(rect=[0, 0, 0.82, 1])
     output_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output_path, dpi=180, bbox_inches="tight")
     plt.close(fig)
@@ -1620,6 +1704,7 @@ def plot_outputs(
 
 def _build_readme(
     run: QuantRun,
+    strategy_meta: dict[str, str],
     backtest_summary: dict[str, Any],
     candidates: list[OpportunityCandidate],
     scored_records: list[dict[str, Any]],
@@ -1630,7 +1715,10 @@ def _build_readme(
     secondary_count = sum(1 for candidate in candidates if candidate.candidate_tier == "secondary")
     drop_count = sum(1 for item in scored_records if item["route"] == "drop")
 
-    return f"""# {TITLE_ZH}
+    return f"""# {strategy_meta['strategy_name_std']}
+
+- 策略代码：`{strategy_meta['strategy_code']}`
+- 中文名：`{strategy_meta['strategy_name_zh']}`
 
 ## 策略是什么
 
@@ -1685,6 +1773,7 @@ def _build_readme(
 
 ## 回测摘要
 
+- 手续费口径：`双边合计 2bp`
 - 交易笔数：`{backtest_summary['trade_count']}`
 - 胜率：`{backtest_summary['win_rate']:.4f}%`
 - 平均 R：`{backtest_summary['avg_r']}`
@@ -1727,6 +1816,7 @@ def run_strategylet(
 ) -> dict[str, Any]:
     input_path = Path(input_path)
     output_root = Path(output_root)
+    strategy_meta = _strategy_meta(registry_entry)
     started_at = datetime.now().replace(microsecond=0)
     run_id = f"{started_at.strftime('%Y%m%dT%H%M%S')}-{_stable_id(SPEC_ID, symbol, timeframe, started_at.date())}"
     output_dir = output_root / SPEC_ID / run_id
@@ -1746,6 +1836,7 @@ def run_strategylet(
         "timeframe": timeframe,
         "backtest_config": backtest_config,
         "scored_records": scored_records,
+        "strategy_meta": strategy_meta,
     }
     candidates, events = build_candidates(signal_df, run_ctx=run_ctx)
     labeled_events = label_outcomes(
@@ -1825,6 +1916,7 @@ def run_strategylet(
         params={
             "detect": asdict(config),
             "backtest": asdict(backtest_config),
+            "strategy_meta": strategy_meta,
         },
         summary=run_summary,
         events=labeled_events,
@@ -1845,6 +1937,8 @@ def run_strategylet(
         backtest_summary_path,
         {
             "run_id": run_id,
+            "strategy_code": strategy_meta["strategy_code"],
+            "strategy_name_std": strategy_meta["strategy_name_std"],
             "spec_id": SPEC_ID,
             "concept_id": CONCEPT_ID,
             "symbol": symbol,
@@ -1855,7 +1949,7 @@ def run_strategylet(
             "backtest": backtest_summary,
             "plots": plot_summary,
             "assumptions": {
-                "fee_bps_per_side": backtest_config.fee_bps_per_side,
+                "fee_bps_round_trip": backtest_config.fee_bps_round_trip,
                 "notional_usdt": backtest_config.notional_usdt,
                 "label_lookahead": config.label_lookahead,
             },
@@ -1866,6 +1960,7 @@ def run_strategylet(
     readme_path.write_text(
         _build_readme(
             run=quant_run,
+            strategy_meta=strategy_meta,
             backtest_summary=backtest_summary,
             candidates=candidates,
             scored_records=scored_records,
@@ -1876,6 +1971,8 @@ def run_strategylet(
     )
 
     return {
+        "strategy_code": strategy_meta["strategy_code"],
+        "strategy_name_std": strategy_meta["strategy_name_std"],
         "spec_id": SPEC_ID,
         "run_id": run_id,
         "output_dir": str(output_dir.resolve()),

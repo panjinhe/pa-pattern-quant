@@ -1,5 +1,8 @@
 [
   {
+    "strategy_seq": "001",
+    "strategy_code": "PA_taifei_001",
+    "strategy_name_std": "PA_taifei_001_看衰区间边线突破",
     "spec_id": "range_edge_failed_breakout-v1-btc-5m",
     "concept_id": "range_edge_failed_breakout",
     "strategy_name_zh": "看衰区间边线突破",
@@ -25,6 +28,9 @@
     ]
   },
   {
+    "strategy_seq": "002",
+    "strategy_code": "PA_taifei_002",
+    "strategy_name_std": "PA_taifei_002_收线市价追进",
     "spec_id": "close_chase_entry-v1-btc-5m",
     "concept_id": "close_chase_entry",
     "strategy_name_zh": "收线市价追进",
@@ -48,6 +54,9 @@
     ]
   },
   {
+    "strategy_seq": "003",
+    "strategy_code": "PA_taifei_003",
+    "strategy_name_std": "PA_taifei_003_逆一失败，顺一成功",
     "spec_id": "inverse1_fail_forward1_success-v1-btc-5m",
     "concept_id": "inverse1_fail_forward1_success",
     "strategy_name_zh": "逆一失败，顺一成功",
@@ -71,6 +80,9 @@
     ]
   },
   {
+    "strategy_seq": "004",
+    "strategy_code": "PA_taifei_004",
+    "strategy_name_std": "PA_taifei_004_20 均线缺口",
     "spec_id": "ema20_gap_touch_fail-v1-btc-5m",
     "concept_id": "ema20_gap_touch_fail",
     "strategy_name_zh": "20 均线缺口",
@@ -94,6 +106,9 @@
     ]
   },
   {
+    "strategy_seq": "005",
+    "strategy_code": "PA_taifei_005",
+    "strategy_name_std": "PA_taifei_005_双重顶底旗形回调",
     "spec_id": "double_top_bottom_flag_pullback-v1-btc-5m",
     "concept_id": "double_top_bottom_flag_pullback",
     "strategy_name_zh": "双重顶底旗形回调",
@@ -117,6 +132,9 @@
     ]
   },
   {
+    "strategy_seq": "006",
+    "strategy_code": "PA_taifei_006",
+    "strategy_name_std": "PA_taifei_006_区间突破回调",
     "spec_id": "range_breakout_pullback-v1-btc-5m",
     "concept_id": "range_breakout_pullback",
     "strategy_name_zh": "区间突破回调",
@@ -141,6 +159,9 @@
     ]
   },
   {
+    "strategy_seq": "007",
+    "strategy_code": "PA_taifei_007",
+    "strategy_name_std": "PA_taifei_007_楔形顶底旗形回调",
     "spec_id": "wedge_flag_pullback-v1-btc-5m",
     "concept_id": "wedge_flag_pullback",
     "strategy_name_zh": "楔形顶底旗形回调",
@@ -164,6 +185,9 @@
     ]
   },
   {
+    "strategy_seq": "008",
+    "strategy_code": "PA_taifei_008",
+    "strategy_name_std": "PA_taifei_008_急赴磁体",
     "spec_id": "rush_to_magnet-v1-btc-5m",
     "concept_id": "rush_to_magnet",
     "strategy_name_zh": "急赴磁体",
@@ -187,6 +211,9 @@
     ]
   },
   {
+    "strategy_seq": "009",
+    "strategy_code": "PA_taifei_009",
+    "strategy_name_std": "PA_taifei_009_123 法则",
     "spec_id": "one_two_three_reversal-v1-btc-5m",
     "concept_id": "one_two_three_reversal",
     "strategy_name_zh": "123 法则",
@@ -210,6 +237,9 @@
     ]
   },
   {
+    "strategy_seq": "010",
+    "strategy_code": "PA_taifei_010",
+    "strategy_name_std": "PA_taifei_010_急速与通道反转",
     "spec_id": "spike_channel_reversal-v1-btc-5m",
     "concept_id": "spike_channel_reversal",
     "strategy_name_zh": "急速与通道反转",
@@ -234,6 +264,9 @@
     ]
   },
   {
+    "strategy_seq": "011",
+    "strategy_code": "PA_taifei_011",
+    "strategy_name_std": "PA_taifei_011_第一均线缺口",
     "spec_id": "first_ema_gap-v1-btc-5m",
     "concept_id": "first_ema_gap",
     "strategy_name_zh": "第一均线缺口",
@@ -258,6 +291,9 @@
     ]
   },
   {
+    "strategy_seq": "012",
+    "strategy_code": "PA_taifei_012",
+    "strategy_name_std": "PA_taifei_012_末端旗形反转",
     "spec_id": "terminal_flag_reversal-v1-btc-5m",
     "concept_id": "terminal_flag_reversal",
     "strategy_name_zh": "末端旗形反转",
@@ -281,4 +317,3 @@
     ]
   }
 ]
-
