@@ -779,8 +779,10 @@ def _plot_event(
     output_path: Path,
 ) -> None:
     signal_idx = int(event.meta["signal_idx"])
+    exit_idx_raw = event.outcome.meta.get("exit_idx") if event.outcome is not None else None
+    exit_idx = int(exit_idx_raw) if exit_idx_raw is not None else signal_idx
     start_idx = max(0, signal_idx - 80)
-    end_idx = min(df.height - 1, signal_idx + 40)
+    end_idx = min(df.height - 1, max(signal_idx + 40, exit_idx + 6))
     plot_df = df.filter((pl.col("idx") >= start_idx) & (pl.col("idx") <= end_idx))
 
     timestamps = [
@@ -879,15 +881,90 @@ def _plot_event(
         )
 
     trade_plan = event.trade_plan
+
+    def _annotate_trade_marker(
+        timestamp_text: str,
+        price: float,
+        label: str,
+        color: str,
+        marker: str,
+        y_offset: int,
+    ) -> None:
+        marker_time = datetime.fromisoformat(timestamp_text)
+        marker_x = mdates.date2num(marker_time)
+        ax.scatter(
+            marker_x,
+            price,
+            s=120,
+            color=color,
+            marker=marker,
+            edgecolors="white",
+            linewidths=1.2,
+            zorder=6,
+        )
+        ax.annotate(
+            label,
+            xy=(marker_x, price),
+            xytext=(0, y_offset),
+            textcoords="offset points",
+            ha="center",
+            va="bottom" if y_offset >= 0 else "top",
+            fontsize=9.5,
+            fontweight="bold",
+            color=color,
+            bbox={
+                "boxstyle": "round,pad=0.20",
+                "facecolor": "white",
+                "edgecolor": color,
+                "alpha": 0.95,
+            },
+            arrowprops={
+                "arrowstyle": "-",
+                "color": color,
+                "linewidth": 1.0,
+                "alpha": 0.85,
+            },
+        )
+
+    entry_time = event.detected_at
+    entry_price = float(trade_plan.entry_price) if trade_plan and trade_plan.entry_price is not None else float(
+        event.meta.get("entry_zone_low", 0.0)
+    )
+    entry_color = "#1d8348" if trade_plan and trade_plan.direction == "bullish" else "#b03a2e"
+    _annotate_trade_marker(
+        entry_time,
+        entry_price,
+        "入场",
+        entry_color,
+        "^" if trade_plan and trade_plan.direction == "bullish" else "v",
+        18 if trade_plan and trade_plan.direction == "bullish" else -22,
+    )
+
+    if event.outcome is not None:
+        exit_time_text = str(event.outcome.meta.get("exit_time", event.detected_at))
+        exit_price = float(event.outcome.meta.get("exit_price", entry_price))
+        exit_reason = str(event.outcome.meta.get("exit_reason", "出场"))
+        exit_color = "#2874a6" if float(event.outcome.pnl_r or 0.0) >= 0 else "#7f8c8d"
+        _annotate_trade_marker(
+            exit_time_text,
+            exit_price,
+            f"出场\n{exit_reason}",
+            exit_color,
+            "X",
+            -30 if trade_plan and trade_plan.direction == "bullish" else 28,
+        )
     direction_text = "做多" if trade_plan and trade_plan.direction == "bullish" else "做空"
     summary_lines = [
         f"方向: {direction_text}",
         f"评分: {float(event.score or 0.0):.0f} / {event.meta.get('score_band', '-')}",
         f"入场区: {float(event.meta.get('entry_zone_low', 0.0)):.2f} ~ {float(event.meta.get('entry_zone_high', 0.0)):.2f}",
+        f"入场价: {entry_price:.2f}",
         f"止损: {float(trade_plan.stop_price if trade_plan and trade_plan.stop_price is not None else 0.0):.2f}",
         f"目标1: {float(trade_plan.target_prices[0] if trade_plan and trade_plan.target_prices else 0.0):.2f}",
     ]
     if event.outcome is not None:
+        summary_lines.append(f"出场价: {float(event.outcome.meta.get('exit_price', 0.0)):.2f}")
+        summary_lines.append(f"出场因子: {event.outcome.meta.get('exit_reason', '-')}")
         summary_lines.append(f"结果: {event.outcome.outcome_class}")
         summary_lines.append(f"R: {float(event.outcome.pnl_r or 0.0):.2f}")
     fig.text(
