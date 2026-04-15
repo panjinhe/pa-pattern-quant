@@ -26,6 +26,8 @@ plt.rcParams["axes.unicode_minus"] = False
 
 
 ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 CONTRACT_DIR = ROOT / "阿布课程术语体系" / "contracts"
 if str(CONTRACT_DIR) not in sys.path:
     sys.path.append(str(CONTRACT_DIR))
@@ -41,6 +43,10 @@ from quant_interface import (  # noqa: E402
     QuantSpec,
     RunSummary,
     TradePlan,
+)
+from strategylets.strategy_book_kpi import (  # noqa: E402
+    build_strategy_book_assessment,
+    render_strategy_book_assessment,
 )
 
 
@@ -1787,6 +1793,7 @@ def _build_readme(
     candidates: list[OpportunityCandidate],
     scored_records: list[dict[str, Any]],
     plot_summary: dict[str, Any],
+    strategy_book_assessment: dict[str, Any],
     input_path: Path,
 ) -> str:
     primary_count = sum(1 for candidate in candidates if candidate.candidate_tier == "primary")
@@ -1860,6 +1867,8 @@ def _build_readme(
 - 最大回撤：`{backtest_summary['max_drawdown']}`
 - Profit Factor：`{backtest_summary['profit_factor']}`
 
+{render_strategy_book_assessment(strategy_book_assessment)}
+
 ## 文件清单
 
 - `strategy_spec.json`
@@ -1868,6 +1877,7 @@ def _build_readme(
 - `candidates.parquet`
 - `signals.parquet`
 - `backtest-summary.json`
+- `strategy-book-assessment.json`
 - `trades.csv`
 - `plots/`
 
@@ -1941,6 +1951,18 @@ def run_strategylet(
         pl.col("timestamp").min().alias("sample_start"),
         pl.col("timestamp").max().alias("sample_end"),
     ).to_dicts()[0]
+    strategy_book_assessment = build_strategy_book_assessment(
+        timeframe=timeframe,
+        sample_rows=int(sample_info["rows"]),
+        signal_count=len(scored_records),
+        trade_count=backtest_summary["trade_count"],
+        avg_r=backtest_summary["avg_r"],
+        profit_factor=backtest_summary["profit_factor"],
+        max_drawdown=backtest_summary["max_drawdown"],
+        realtime_safe=quant_spec.realtime_safe,
+        uses_future_bars=quant_spec.uses_future_bars,
+        supports_visualization=quant_spec.supports_visualization,
+    )
 
     run_summary = RunSummary(
         rows=int(sample_info["rows"]),
@@ -1958,6 +1980,7 @@ def run_strategylet(
             "primary_count": sum(1 for item in candidates if item.candidate_tier == "primary"),
             "secondary_count": sum(1 for item in candidates if item.candidate_tier == "secondary"),
             "drop_count": sum(1 for item in scored_records if item["route"] == "drop"),
+            "strategy_book_assessment": strategy_book_assessment,
         },
     )
 
@@ -1967,6 +1990,7 @@ def run_strategylet(
     candidates_parquet_path = output_dir / "candidates.parquet"
     signals_path = output_dir / "signals.parquet"
     backtest_summary_path = output_dir / "backtest-summary.json"
+    strategy_book_assessment_path = output_dir / "strategy-book-assessment.json"
     trades_path = output_dir / "trades.csv"
     readme_path = output_dir / "README.md"
     artifacts = {
@@ -1976,6 +2000,7 @@ def run_strategylet(
         "candidates_parquet": str(candidates_parquet_path.resolve()),
         "signals": str(signals_path.resolve()),
         "backtest_summary": str(backtest_summary_path.resolve()),
+        "strategy_book_assessment": str(strategy_book_assessment_path.resolve()),
         "trades": str(trades_path.resolve()),
         "readme": str(readme_path.resolve()),
     }
@@ -2011,6 +2036,7 @@ def run_strategylet(
         pl.DataFrame(schema={"candidate_id": pl.String}).write_parquet(candidates_parquet_path)
     signal_df.write_parquet(signals_path)
     trades_df.write_csv(trades_path)
+    _write_json(strategy_book_assessment_path, strategy_book_assessment)
     _write_json(
         backtest_summary_path,
         {
@@ -2026,6 +2052,7 @@ def run_strategylet(
             "candidate_count": len(candidates),
             "backtest": backtest_summary,
             "plots": plot_summary,
+            "strategy_book_assessment": strategy_book_assessment,
             "assumptions": {
                 "fee_bps_round_trip": backtest_config.fee_bps_round_trip,
                 "notional_usdt": backtest_config.notional_usdt,
@@ -2043,6 +2070,7 @@ def run_strategylet(
             candidates=candidates,
             scored_records=scored_records,
             plot_summary=plot_summary,
+            strategy_book_assessment=strategy_book_assessment,
             input_path=input_path,
         ),
         encoding="utf-8",
@@ -2058,6 +2086,8 @@ def run_strategylet(
         "event_count": len(labeled_events),
         "candidate_count": len(candidates),
         "trade_count": backtest_summary["trade_count"],
+        "strategy_book_auto_stage": strategy_book_assessment["auto_stage"],
+        "strategy_book_final_status": strategy_book_assessment["final_status"],
     }
 
 
