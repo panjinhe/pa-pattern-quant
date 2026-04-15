@@ -48,11 +48,35 @@ from strategylets.strategy_book_kpi import (  # noqa: E402
     build_strategy_book_assessment,
     render_strategy_book_assessment,
 )
+from strategylets.trend_strategy_common import (  # noqa: E402
+    PRICE_MAIN_INDICATORS,
+    available_indicator_panels,
+    plot_indicator_panels,
+    plot_price_indicator_lines,
+)
 
 
 SPEC_ID = "range_edge_failed_breakout-v1-btc-5m"
 CONCEPT_ID = "range_edge_failed_breakout"
 TITLE_ZH = "看衰区间边线突破"
+RANGE_INDICATOR_PANELS: list[tuple[str, list[tuple[str, str, str]]]] = [
+    (
+        "区间上下文",
+        [
+            ("range_height_atr", "Range Height / ATR", "#8e44ad"),
+            ("overlap_ratio", "Overlap Ratio", "#16a085"),
+            ("ema_gap_atr", "EMA Gap / ATR", "#2874a6"),
+        ],
+    ),
+    (
+        "突破回归",
+        [
+            ("breakout_depth_atr", "Breakout Depth / ATR", "#d35400"),
+            ("body_ratio", "Body Ratio", "#c0392b"),
+            ("close_pos", "Close Pos", "#7d3c98"),
+        ],
+    ),
+]
 DEFAULT_STRATEGY_SEQ = "001"
 DEFAULT_STRATEGY_CODE = "PA_taifei_001"
 DEFAULT_STRATEGY_NAME_STD = f"{DEFAULT_STRATEGY_CODE}_{TITLE_ZH}"
@@ -1519,7 +1543,22 @@ def _plot_event(
         diffs = [max(x_values[i] - x_values[i - 1], 1e-6) for i in range(1, len(x_values))]
         bar_width = min(diffs) * 0.72
 
-    fig, ax = plt.subplots(figsize=(16, 8))
+    signal_x = mdates.date2num(datetime.fromisoformat(event.detected_at))
+    indicator_panels = available_indicator_panels(plot_df, RANGE_INDICATOR_PANELS)
+    panel_count = 1 + len(indicator_panels)
+    height_ratios = [5.0] + [1.35] * len(indicator_panels)
+    fig, axes = plt.subplots(
+        panel_count,
+        1,
+        figsize=(16, 8 + 1.8 * len(indicator_panels)),
+        sharex=True,
+        gridspec_kw={"height_ratios": height_ratios},
+    )
+    if panel_count == 1:
+        axes = [axes]
+    else:
+        axes = list(axes)
+    ax = axes[0]
     for x, open_price, high_price, low_price, close_price in zip(
         x_values,
         plot_df["open"].to_list(),
@@ -1544,6 +1583,7 @@ def _plot_event(
             )
         )
 
+    main_indicator_labels = plot_price_indicator_lines(ax, x_values, plot_df, PRICE_MAIN_INDICATORS)
     for overlay in event.overlays:
         if overlay.kind == "segment" and len(overlay.points) >= 2:
             overlay_times = [
@@ -1707,11 +1747,16 @@ def _plot_event(
         },
     )
 
+    ax.axvline(signal_x, color="#34495e", linewidth=1.0, linestyle=":", alpha=0.75)
     ax.set_title(f"{strategy_name_std} | {event.detected_at}")
     ax.set_ylabel("价格")
-    ax.set_xlabel("时间")
-    ax.xaxis.set_major_formatter(mdates.DateFormatter("%m-%d %H:%M"))
     ax.grid(True, linestyle="--", alpha=0.25)
+    if main_indicator_labels:
+        ax.legend(loc="upper left", fontsize=8, ncol=min(3, len(main_indicator_labels)))
+    if indicator_panels:
+        plot_indicator_panels(axes[1:], x_values, indicator_panels, signal_x=signal_x)
+    axes[-1].set_xlabel("时间")
+    axes[-1].xaxis.set_major_formatter(mdates.DateFormatter("%m-%d %H:%M"))
     fig.autofmt_xdate()
     fig.tight_layout(rect=[0, 0, 0.82, 1])
     output_path.parent.mkdir(parents=True, exist_ok=True)

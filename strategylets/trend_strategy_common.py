@@ -773,6 +773,108 @@ def pick_example_events(events: list[QuantEvent], example_count: int) -> list[Qu
     return picked[:example_count]
 
 
+PRICE_MAIN_INDICATORS: list[tuple[str, str, str]] = [
+    ("ema20", "EMA20", "#f39c12"),
+    ("ema50", "EMA50", "#2980b9"),
+    ("ema200", "EMA200", "#8e44ad"),
+]
+
+TREND_INDICATOR_PANELS: list[tuple[str, list[tuple[str, str, str]]]] = [
+    (
+        "趋势强弱",
+        [
+            ("ema_gap_atr", "EMA Gap / ATR", "#8e44ad"),
+            ("distance_ema20_atr", "Close-EMA20 / ATR", "#2874a6"),
+            ("ema20_slope_atr", "EMA20 Slope / ATR", "#148f77"),
+            ("ema50_slope_atr", "EMA50 Slope / ATR", "#c0392b"),
+        ],
+    ),
+    (
+        "机会触发",
+        [
+            ("distance_from_breakout_atr", "Breakout Dist / ATR", "#d35400"),
+            ("close_vs_recent_high_atr", "Close vs Recent High / ATR", "#1f618d"),
+            ("close_vs_recent_low_atr", "Close vs Recent Low / ATR", "#7d3c98"),
+        ],
+    ),
+]
+
+
+def _series_from_column(plot_df: pl.DataFrame, column_name: str) -> list[float] | None:
+    if column_name not in plot_df.columns:
+        return None
+    raw_values = plot_df[column_name].to_list()
+    if not any(value is not None for value in raw_values):
+        return None
+    return [float(value) if value is not None else math.nan for value in raw_values]
+
+
+def plot_price_indicator_lines(
+    ax: Any,
+    x_values: list[float],
+    plot_df: pl.DataFrame,
+    indicator_defs: list[tuple[str, str, str]],
+) -> list[str]:
+    plotted_labels: list[str] = []
+    for column_name, label, color in indicator_defs:
+        series = _series_from_column(plot_df, column_name)
+        if series is None:
+            continue
+        ax.plot(
+            x_values,
+            series,
+            color=color,
+            linewidth=1.35,
+            alpha=0.95,
+            label=label,
+            zorder=3,
+        )
+        plotted_labels.append(label)
+    return plotted_labels
+
+
+def available_indicator_panels(
+    plot_df: pl.DataFrame,
+    panel_specs: list[tuple[str, list[tuple[str, str, str]]]],
+) -> list[tuple[str, list[tuple[str, str, list[float]]]]]:
+    panels: list[tuple[str, list[tuple[str, str, list[float]]]]] = []
+    for panel_title, indicator_defs in panel_specs:
+        available_lines: list[tuple[str, str, list[float]]] = []
+        for column_name, label, color in indicator_defs:
+            series = _series_from_column(plot_df, column_name)
+            if series is None:
+                continue
+            available_lines.append((label, color, series))
+        if available_lines:
+            panels.append((panel_title, available_lines))
+    return panels
+
+
+def plot_indicator_panels(
+    axes: list[Any],
+    x_values: list[float],
+    panel_series: list[tuple[str, list[tuple[str, str, list[float]]]]],
+    signal_x: float | None = None,
+) -> None:
+    for ax_indicator, (panel_title, lines) in zip(axes, panel_series, strict=False):
+        for label, color, series in lines:
+            ax_indicator.plot(
+                x_values,
+                series,
+                color=color,
+                linewidth=1.25,
+                alpha=0.95,
+                label=label,
+            )
+        ax_indicator.axhline(0.0, color="#7f8c8d", linewidth=0.9, linestyle="--", alpha=0.45)
+        if signal_x is not None:
+            ax_indicator.axvline(signal_x, color="#34495e", linewidth=0.9, linestyle=":", alpha=0.7)
+        ax_indicator.set_title(panel_title, fontsize=10)
+        ax_indicator.set_ylabel("指标")
+        ax_indicator.grid(True, linestyle="--", alpha=0.22)
+        ax_indicator.legend(loc="upper left", fontsize=8, ncol=2)
+
+
 def _plot_event(
     df: pl.DataFrame,
     event: QuantEvent,
@@ -795,7 +897,22 @@ def _plot_event(
         diffs = [max(x_values[i] - x_values[i - 1], 1e-6) for i in range(1, len(x_values))]
         bar_width = min(diffs) * 0.72
 
-    fig, ax = plt.subplots(figsize=(16, 8))
+    signal_x = mdates.date2num(datetime.fromisoformat(event.detected_at))
+    indicator_panels = available_indicator_panels(plot_df, TREND_INDICATOR_PANELS)
+    panel_count = 1 + len(indicator_panels)
+    height_ratios = [5.0] + [1.35] * len(indicator_panels)
+    fig, axes = plt.subplots(
+        panel_count,
+        1,
+        figsize=(16, 8 + 1.8 * len(indicator_panels)),
+        sharex=True,
+        gridspec_kw={"height_ratios": height_ratios},
+    )
+    if panel_count == 1:
+        axes = [axes]
+    else:
+        axes = list(axes)
+    ax = axes[0]
     for x, open_price, high_price, low_price, close_price in zip(
         x_values,
         plot_df["open"].to_list(),
@@ -820,6 +937,7 @@ def _plot_event(
             )
         )
 
+    main_indicator_labels = plot_price_indicator_lines(ax, x_values, plot_df, PRICE_MAIN_INDICATORS)
     for overlay in event.overlays:
         if overlay.kind == "segment" and len(overlay.points) >= 2:
             overlay_times = [
@@ -983,11 +1101,16 @@ def _plot_event(
         },
     )
 
+    ax.axvline(signal_x, color="#34495e", linewidth=1.0, linestyle=":", alpha=0.75)
     ax.set_title(f"{event.meta.get('strategy_name_std', event.spec_id)} | {event.detected_at}")
     ax.set_ylabel("价格")
-    ax.set_xlabel("时间")
-    ax.xaxis.set_major_formatter(mdates.DateFormatter("%m-%d %H:%M"))
     ax.grid(True, linestyle="--", alpha=0.25)
+    if main_indicator_labels:
+        ax.legend(loc="upper left", fontsize=8, ncol=min(3, len(main_indicator_labels)))
+    if indicator_panels:
+        plot_indicator_panels(axes[1:], x_values, indicator_panels, signal_x=signal_x)
+    axes[-1].set_xlabel("时间")
+    axes[-1].xaxis.set_major_formatter(mdates.DateFormatter("%m-%d %H:%M"))
     fig.autofmt_xdate()
     fig.tight_layout(rect=[0, 0, 0.82, 1])
     output_path.parent.mkdir(parents=True, exist_ok=True)
