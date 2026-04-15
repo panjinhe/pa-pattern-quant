@@ -17,7 +17,9 @@ description: 将 PRD、CSV、字幕、课程笔记、策略说明或历史研究
 ## 默认假设
 
 - 默认使用中文，新增文件使用 UTF-8，git 提交消息使用中文。
-- 默认直播目标口径为 `BTCUSDT 5m`；如果当前只有现成的 `ETHUSDT 5m` 数据，就先用它验证结构、回测和图层，并在结果里写明假设。
+- 默认直播目标口径为 `BTCUSDT 5m + ETHUSDT 5m`。
+- 如果目标是“进入通用策略集”，默认必须同时评估 `BTC` 和 `ETH`，两个品种都不能太差，且合并结果也要过门禁。
+- 如果当前只验证到单一品种，不再把它直接写成“通用策略通过”，而是按 `品种特化策略池` 或观察状态记录。
 - 默认交易成本按每边 `2 bps` 处理；除非用户明确指定，不要改成其他值。
 - 默认一次只完整实现 `1` 个策略模板；如果输入里有多个策略，其余策略先进入 `registry` 占位。
 - 默认优先复用现有 `strategylets` 原语与公共函数，不要从零重写同类结构。
@@ -94,9 +96,13 @@ description: 将 PRD、CSV、字幕、课程笔记、策略说明或历史研究
   - `candidates.parquet`
   - `signals.parquet`
   - `backtest-summary.json`
+  - `strategy-book-assessment.json`
   - `trades.csv`
   - `README.md`
   - `plots/`
+- 如果跑的是通用门禁默认入口，还要在同一个 `<run_id>` 下同时保留：
+  - `symbols/BTCUSDT/`
+  - `symbols/ETHUSDT/`
 - `plots/` 至少包含：
   - `example-001.png` 这类案例图
   - `equity-curve.png`
@@ -116,7 +122,13 @@ description: 将 PRD、CSV、字幕、课程笔记、策略说明或历史研究
 ### 6. 运行、验证与汇报
 
 - 至少实际运行一次策略模块，不要只写代码不执行。
-- 优先使用模块自带 CLI，例如：
+- 默认优先使用批量入口跑通用门禁，例如：
+
+```powershell
+.venv\Scripts\python.exe .\scripts\run_strategylet_batch.py --spec <spec_id> --timeframe 5m
+```
+
+- 如果只是单品种调试，才退回模块自带 CLI，例如：
 
 ```powershell
 .venv\Scripts\python.exe .\strategylets\<module>.py --input <ohlcv.parquet> --output-root .\产出\标准策略 --symbol ETHUSDT --timeframe 5m
@@ -129,6 +141,9 @@ description: 将 PRD、CSV、字幕、课程笔记、策略说明或历史研究
   - `primary / secondary / drop` 路由正确。
   - 图中能直观看出为什么会触发该策略。
   - 图中能看到主要决策指标，并能分清哪些指标负责机会判断、哪些指标负责强弱判断。
+  - `BTC`、`ETH` 单品种评估都不落入 `不通过`。
+  - `BTC+ETH` 合并结果是从合并信号 / 合并 trade ledger / 合并 equity curve 重算出来，而不是平均单品种摘要值。
+  - `strategy-book-assessment.json` 为 v2 结构，包含 `symbols.BTCUSDT`、`symbols.ETHUSDT`、`combined`、`final_bucket`、`manual_review`。
 - 汇报时优先给用户：
   - 当前实现到了哪一步
   - 策略输入是什么

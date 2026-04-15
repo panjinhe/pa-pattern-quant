@@ -1946,13 +1946,15 @@ def run_strategylet(
     timeframe: str,
     registry_entry: dict[str, Any] | None = None,
     example_count: int = 6,
+    run_id: str | None = None,
+    output_dir: Path | None = None,
 ) -> dict[str, Any]:
     input_path = Path(input_path)
     output_root = Path(output_root)
     strategy_meta = _strategy_meta(registry_entry)
     started_at = datetime.now().replace(microsecond=0)
-    run_id = f"{started_at.strftime('%Y%m%dT%H%M%S')}-{_stable_id(SPEC_ID, symbol, timeframe, started_at.date())}"
-    output_dir = output_root / SPEC_ID / run_id
+    run_id = run_id or f"{started_at.strftime('%Y%m%dT%H%M%S')}-{_stable_id(SPEC_ID, symbol, timeframe, started_at.date())}"
+    output_dir = Path(output_dir) if output_dir is not None else (output_root / SPEC_ID / run_id)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     config = FailedBreakoutConfig()
@@ -2007,6 +2009,9 @@ def run_strategylet(
         realtime_safe=quant_spec.realtime_safe,
         uses_future_bars=quant_spec.uses_future_bars,
         supports_visualization=quant_spec.supports_visualization,
+        symbol=symbol,
+        sample_start=sample_info["sample_start"],
+        sample_end=sample_info["sample_end"],
     )
 
     run_summary = RunSummary(

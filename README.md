@@ -2,7 +2,8 @@
 
 这是一个围绕 `abu-pattern-quant` skill 搭建的价格行为量化项目。项目的核心目标不是手工写策略说明，而是把阿布价格行为课程讲义、语音转文字稿、中文笔记等文本材料，直接转换成可运行、可回测、可出图、可落盘的量化交付物。
 
-当前项目以 `ETHUSDT 5m` 的 OHLCV 数据为默认样本，使用 `Polars + Plotly + Python` 完成形态检测、策略回测、结果汇总和图表输出。
+当前项目使用 `Polars + Plotly + Python` 完成形态检测、策略回测、结果汇总和图表输出。  
+研究样例仍大量基于 `ETHUSDT 5m`，但“进入通用策略集”的门禁已经升级为默认同时评估 `BTCUSDT 5m + ETHUSDT 5m`。
 
 ## Skill 主要功能
 
@@ -90,11 +91,15 @@ data/                 本地样本数据目录
 
 ## 数据说明
 
-默认数据路径是：
+默认单品种样例数据路径是：
 
 `data/binance_um_perp/ETHUSDT/5m/ETHUSDT-5m-history.parquet`
 
-这个历史 parquet 由于体积原因已从 git 跟踪中排除，需要本地自行准备。项目里提供了数据构建脚本：
+通用策略集门禁默认还需要同时准备：
+
+`data/binance_um_perp/BTCUSDT/5m/BTCUSDT-5m-history.parquet`
+
+这些历史 parquet 由于体积原因已从 git 跟踪中排除，需要本地自行准备。项目里目前提供了 ETH 的数据构建脚本：
 
 ```powershell
 .venv\Scripts\python.exe .\scripts\build_eth_5m_history.py
@@ -151,7 +156,8 @@ skill 会默认：
 [$text-to-live-strategy](E:\pa-pattern-quant\skills\text-to-live-strategy\SKILL.md) 太妃 策略书 3369885bafd080708125d1637a352a13_all.csv
 ```
 
-这个 skill 会优先把输入整理为命名一致的策略元数据、标准 `strategylets` 模块，以及直播可直接消费的 `OpportunityCandidate` 产物。
+这个 skill 会优先把输入整理为命名一致的策略元数据、标准 `strategylets` 模块，以及直播可直接消费的 `OpportunityCandidate` 产物。  
+当策略进入标准门禁评估时，默认应通过批量入口同时跑 `BTC + ETH`，而不是只看单品种。
 
 ## 当前项目状态
 
@@ -171,11 +177,19 @@ skill 会默认：
 
 ## 策略书准入
 
-为了避免“这个策略大概还行，但不确定能不能进策略书”的模糊状态，仓库现在补了一套统一准入标准：
+为了避免“这个策略大概还行，但不确定能不能进策略集”的模糊状态，仓库现在补了一套统一准入标准：
 
-- 自动门槛：机会频率、基线表现、样本充足性、实盘化前提
-- 人工复核：抽样看图，判断结构是否自然、买卖点是否像真人会做
-- 最终结论：`可纳入策略书 / 待人工复核 / 观察名单 / 暂不纳入`
+- 通用策略集默认评估 `BTCUSDT 5m + ETHUSDT 5m`
+- 单品种门槛：`BTC`、`ETH` 都至少达到观察线，不能太差
+- 合并门槛：`BTC+ETH` 合并结果必须达到正式通过线
+- 人工复核：用合并抽样看图，并保证 `BTC / ETH` 各至少 `10` 张
+- 最终归类：`可纳入通用策略集 / 待人工复核 / 观察名单 / 品种特化策略池 / 暂不纳入`
+
+推荐批量入口：
+
+```powershell
+.venv\Scripts\python.exe .\scripts\run_strategylet_batch.py --spec <spec_id>
+```
 
 详细规则见：
 

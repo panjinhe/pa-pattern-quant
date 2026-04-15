@@ -553,39 +553,30 @@ def empty_trades_df() -> pl.DataFrame:
     )
 
 
-def run_backtest(
-    events: list[QuantEvent],
-    backtest_params: BacktestConfig | dict[str, Any] | None = None,
-) -> tuple[pl.DataFrame, dict[str, Any], pl.DataFrame]:
-    backtest_config = coerce_backtest_config(backtest_params)
-    trade_rows = [
-        _event_to_trade_row(event)
-        for event in events
-        if (
-            event.outcome is not None
-            and float(event.score or 0.0) >= 60
-            and bool(event.features.get("hard_gate_pass"))
-        )
-    ]
-    trades_df = pl.DataFrame(trade_rows) if trade_rows else empty_trades_df()
+def empty_equity_curve_df() -> pl.DataFrame:
+    return pl.DataFrame(
+        schema={
+            "trade_no": pl.Int64,
+            "exit_time": pl.String,
+            "net_pnl": pl.Float64,
+            "gross_r": pl.Float64,
+            "cumulative_net_pnl": pl.Float64,
+            "cumulative_gross_r": pl.Float64,
+            "nav": pl.Float64,
+            "peak_nav": pl.Float64,
+            "drawdown": pl.Float64,
+            "drawdown_pct": pl.Float64,
+        }
+    )
 
+
+def summarize_trades(
+    trades_df: pl.DataFrame,
+    backtest_params: BacktestConfig | dict[str, Any] | None = None,
+) -> tuple[dict[str, Any], pl.DataFrame]:
+    backtest_config = coerce_backtest_config(backtest_params)
     if trades_df.is_empty():
-        equity_df = pl.DataFrame(
-            schema={
-                "trade_no": pl.Int64,
-                "exit_time": pl.String,
-                "net_pnl": pl.Float64,
-                "gross_r": pl.Float64,
-                "cumulative_net_pnl": pl.Float64,
-                "cumulative_gross_r": pl.Float64,
-                "nav": pl.Float64,
-                "peak_nav": pl.Float64,
-                "drawdown": pl.Float64,
-                "drawdown_pct": pl.Float64,
-            }
-        )
         return (
-            trades_df,
             {
                 "trade_count": 0,
                 "win_rate": 0.0,
@@ -598,7 +589,7 @@ def run_backtest(
                 "ending_nav": 1.0,
                 "max_drawdown_pct": 0.0,
             },
-            equity_df,
+            empty_equity_curve_df(),
         )
 
     trades_df = trades_df.sort("exit_time")
@@ -652,6 +643,24 @@ def run_backtest(
         "ending_nav": round(float(equity_df["nav"].tail(1).item()), 6),
         "max_drawdown_pct": round(float(equity_df["drawdown_pct"].min() or 0.0) * 100.0, 6),
     }
+    return summary, equity_df
+
+
+def run_backtest(
+    events: list[QuantEvent],
+    backtest_params: BacktestConfig | dict[str, Any] | None = None,
+) -> tuple[pl.DataFrame, dict[str, Any], pl.DataFrame]:
+    trade_rows = [
+        _event_to_trade_row(event)
+        for event in events
+        if (
+            event.outcome is not None
+            and float(event.score or 0.0) >= 60
+            and bool(event.features.get("hard_gate_pass"))
+        )
+    ]
+    trades_df = pl.DataFrame(trade_rows) if trade_rows else empty_trades_df()
+    summary, equity_df = summarize_trades(trades_df, backtest_params=backtest_params)
     return trades_df, summary, equity_df
 
 
