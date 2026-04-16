@@ -43,6 +43,66 @@ def _symbol_assessment(
 
 
 class StrategyBookKpiTests(unittest.TestCase):
+    def test_frequency_boundary_values_follow_v21_thresholds(self) -> None:
+        passed = _symbol_assessment(
+            symbol="BTCUSDT",
+            signal_count=8,
+            trade_count=120,
+            avg_r=0.01,
+            profit_factor=1.02,
+            max_drawdown=-0.10,
+        )
+        watch = _symbol_assessment(
+            symbol="ETHUSDT",
+            signal_count=1,
+            trade_count=120,
+            avg_r=0.01,
+            profit_factor=1.02,
+            max_drawdown=-0.10,
+        )
+        failed = _symbol_assessment(
+            symbol="ETHUSDT",
+            signal_count=0,
+            trade_count=120,
+            avg_r=0.01,
+            profit_factor=1.02,
+            max_drawdown=-0.10,
+        )
+
+        self.assertEqual(passed["metrics"][0]["status"], "通过")
+        self.assertEqual(watch["metrics"][0]["status"], "观察")
+        self.assertEqual(failed["metrics"][0]["status"], "不通过")
+
+    def test_sample_boundary_values_follow_v21_thresholds(self) -> None:
+        passed = _symbol_assessment(
+            symbol="BTCUSDT",
+            signal_count=10,
+            trade_count=100,
+            avg_r=0.01,
+            profit_factor=1.02,
+            max_drawdown=-0.10,
+        )
+        watch = _symbol_assessment(
+            symbol="ETHUSDT",
+            signal_count=10,
+            trade_count=40,
+            avg_r=0.01,
+            profit_factor=1.02,
+            max_drawdown=-0.10,
+        )
+        failed = _symbol_assessment(
+            symbol="ETHUSDT",
+            signal_count=10,
+            trade_count=39,
+            avg_r=0.01,
+            profit_factor=1.02,
+            max_drawdown=-0.10,
+        )
+
+        self.assertEqual(passed["metrics"][2]["status"], "通过")
+        self.assertEqual(watch["metrics"][2]["status"], "观察")
+        self.assertEqual(failed["metrics"][2]["status"], "不通过")
+
     def test_universal_pass_when_btc_pass_eth_watch_combined_pass_and_manual_pass(self) -> None:
         btc = _symbol_assessment(
             symbol="BTCUSDT",
@@ -142,7 +202,7 @@ class StrategyBookKpiTests(unittest.TestCase):
         )
         combined = _symbol_assessment(
             symbol="BTC+ETH 合并",
-            signal_count=8,
+            signal_count=6,
             trade_count=90,
             avg_r=-0.01,
             profit_factor=0.98,
@@ -158,6 +218,42 @@ class StrategyBookKpiTests(unittest.TestCase):
 
         self.assertEqual(assessment["auto_stage"], "观察名单")
         self.assertEqual(assessment["final_bucket"], "观察名单")
+
+    def test_combined_still_cannot_enter_universal_bucket_when_baseline_fails(self) -> None:
+        btc = _symbol_assessment(
+            symbol="BTCUSDT",
+            signal_count=8,
+            trade_count=120,
+            avg_r=0.01,
+            profit_factor=1.01,
+            max_drawdown=-0.18,
+        )
+        eth = _symbol_assessment(
+            symbol="ETHUSDT",
+            signal_count=8,
+            trade_count=120,
+            avg_r=0.00,
+            profit_factor=1.00,
+            max_drawdown=-0.20,
+        )
+        combined = _symbol_assessment(
+            symbol="BTC+ETH 合并",
+            signal_count=12,
+            trade_count=160,
+            avg_r=-0.01,
+            profit_factor=0.94,
+            max_drawdown=-0.22,
+        )
+
+        assessment = build_universal_strategy_book_assessment(
+            timeframe="5m",
+            symbol_assessments={"BTCUSDT": btc, "ETHUSDT": eth},
+            combined_assessment=combined,
+            manual_review=build_manual_review_assessment(status="pending"),
+        )
+
+        self.assertEqual(combined["auto_stage"], "不通过")
+        self.assertEqual(assessment["final_bucket"], "暂不纳入")
 
     def test_manual_review_needs_samples_when_one_symbol_pool_is_insufficient(self) -> None:
         btc = _symbol_assessment(

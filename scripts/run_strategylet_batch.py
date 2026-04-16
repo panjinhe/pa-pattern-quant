@@ -35,6 +35,10 @@ REGISTRY_PATH = ROOT / "strategylets" / "registry.json"
 DEFAULT_DATA_ROOT = ROOT / "data" / "binance_um_perp"
 DEFAULT_OUTPUT_ROOT = ROOT / "产出" / "标准策略"
 DEFAULT_SYMBOLS = ["BTCUSDT", "ETHUSDT"]
+LEGACY_FREQUENCY_PASS_THRESHOLD = 1.0
+LEGACY_FREQUENCY_WATCH_THRESHOLD = 0.4
+LEGACY_SAMPLE_PASS_THRESHOLD = 120
+LEGACY_SAMPLE_WATCH_THRESHOLD = 60
 
 
 def load_registry(path: Path = REGISTRY_PATH) -> list[dict[str, Any]]:
@@ -272,6 +276,141 @@ def _collect_symbol_payload(symbol: str, output_dir: Path) -> dict[str, Any]:
         "signal_count": int(summary.get("signal_count", 0) or 0),
         "event_count": int(summary.get("event_count", 0) or 0),
         "candidate_count": int(summary.get("extra", {}).get("candidate_count", len(candidates_rows)) or 0),
+    }
+
+
+def _metric_by_id(assessment: dict[str, Any], metric_id: str) -> dict[str, Any]:
+    for metric in assessment.get("metrics", []):
+        if metric.get("metric_id") == metric_id:
+            return metric
+    raise KeyError(f"未找到 metric_id={metric_id}")
+
+
+def _legacy_frequency_status(assessment: dict[str, Any]) -> str:
+    sample_days = assessment.get("sample_days")
+    signal_count = int(assessment.get("signal_count", 0) or 0)
+    if sample_days is None or sample_days <= 0:
+        return "待补充"
+    opportunities_per_day = signal_count / sample_days
+    if opportunities_per_day >= LEGACY_FREQUENCY_PASS_THRESHOLD:
+        return "通过"
+    if opportunities_per_day >= LEGACY_FREQUENCY_WATCH_THRESHOLD:
+        return "观察"
+    return "不通过"
+
+
+def _legacy_sample_status(assessment: dict[str, Any]) -> str:
+    trade_count = int(assessment.get("trade_count", 0) or 0)
+    if trade_count >= LEGACY_SAMPLE_PASS_THRESHOLD:
+        return "通过"
+    if trade_count >= LEGACY_SAMPLE_WATCH_THRESHOLD:
+        return "观察"
+    return "不通过"
+
+
+def _status_transition_note(before: str, after: str) -> str | None:
+    if before == after:
+        return None
+    return f"{before}->{after}"
+
+
+def _assessment_impact_note(scope_label: str, assessment: dict[str, Any]) -> list[str]:
+    notes: list[str] = []
+    frequency_before = _legacy_frequency_status(assessment)
+    frequency_after = _metric_by_id(assessment, "opportunity_frequency")["status"]
+    sample_before = _legacy_sample_status(assessment)
+    sample_after = _metric_by_id(assessment, "sample_sufficiency")["status"]
+
+    frequency_note = _status_transition_note(frequency_before, frequency_after)
+    if frequency_note:
+        notes.append(f"{scope_label} 频率 {frequency_note}")
+
+    sample_note = _status_transition_note(sample_before, sample_after)
+    if sample_note:
+        notes.append(f"{scope_label} 样本 {sample_note}")
+    return notes
+
+
+def _build_batch_summary_rows(results: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for result in results:
+        assessment_path = Path(result["strategy_book_assessment_path"])
+        assessment = _read_json(assessment_path)
+        btc = assessment["symbols"].get("BTCUSDT")
+        eth = assessment["symbols"].get("ETHUSDT")
+        combined = assessment["combined"]
+
+        blocking_items = sorted(
+            {
+                *btc.get("blocking_metrics", []),
+                *eth.get("blocking_metrics", []),
+                *combined.get("blocking_metrics", []),
+            }
+        )
+        impact_notes = [
+            *(_assessment_impact_note("BTC", btc) if btc else []),
+            *(_assessment_impact_note("ETH", eth) if eth else []),
+            *_assessment_impact_note("合并", combined),
+        ]
+        if "基线表现" in blocking_items:
+            impact_notes.append("当前仍主要被基线表现卡住")
+        elif impact_notes:
+            impact_notes.append("这次放宽主要影响研究入口，不代表已可入通用池")
+        else:
+            impact_notes.append("这次放宽对最终归类影响有限")
+
+        rows.append(
+            {
+                "spec_id": result["spec_id"],
+                "strategy_name_std": result["strategy_name_std"],
+                "btc_status": btc["auto_stage"] if btc else "缺失",
+                "eth_status": eth["auto_stage"] if eth else "缺失",
+                "combined_status": combined["auto_stage"],
+                "final_bucket": assessment["final_bucket"],
+                "blocking_items": " / ".join(blocking_items) if blocking_items else "无",
+                "impact_note": "；".join(impact_notes),
+                "assessment_path": str(assessment_path.resolve()),
+                "output_dir": result["output_dir"],
+            }
+        )
+    return rows
+
+
+def _write_batch_summary(
+    *,
+    output_root: Path,
+    timeframe: str,
+    results: list[dict[str, Any]],
+) -> dict[str, str]:
+    generated_at = datetime.now().replace(microsecond=0)
+    summary_dir = Path(output_root) / "_batch_summaries"
+    summary_dir.mkdir(parents=True, exist_ok=True)
+    stem = f"{generated_at.strftime('%Y%m%dT%H%M%S')}-gate-summary-{timeframe}"
+    csv_path = summary_dir / f"{stem}.csv"
+    md_path = summary_dir / f"{stem}.md"
+
+    rows = _build_batch_summary_rows(results)
+    pl.DataFrame(rows).write_csv(csv_path)
+
+    lines = [
+        f"# 通用门禁汇总（{timeframe}）",
+        "",
+        f"- 生成时间：`{generated_at.isoformat(sep=' ', timespec='seconds')}`",
+        "- 说明：本轮频率 / 样本门槛已中度放宽；若策略仍未通过，通常意味着主要问题仍在基线表现而非研究入口。",
+        "",
+        "| spec_id | BTC | ETH | 合并 | 最终归类 | 阻塞项 | 影响说明 |",
+        "| --- | --- | --- | --- | --- | --- | --- |",
+    ]
+    for row in rows:
+        lines.append(
+            f"| {row['spec_id']} | {row['btc_status']} | {row['eth_status']} | "
+            f"{row['combined_status']} | {row['final_bucket']} | {row['blocking_items']} | "
+            f"{row['impact_note']} |"
+        )
+    md_path.write_text("\n".join(lines), encoding="utf-8")
+    return {
+        "batch_summary_csv": str(csv_path.resolve()),
+        "batch_summary_md": str(md_path.resolve()),
     }
 
 
@@ -606,6 +745,7 @@ def _run_universal_strategylet(
         "spec_id": spec["spec_id"],
         "run_id": group_run_id,
         "output_dir": str(combined_dir.resolve()),
+        "strategy_book_assessment_path": str(strategy_book_assessment_path.resolve()),
         "symbols": symbols,
         "signal_count": signal_count,
         "event_count": event_count,
@@ -635,6 +775,7 @@ def main() -> None:
         raise SystemExit("没有可运行的策略。")
 
     symbol_inputs = _resolve_symbol_inputs(args)
+    results: list[dict[str, Any]] = []
     for spec in specs:
         if spec["status"] != "implemented":
             raise SystemExit(
@@ -653,7 +794,16 @@ def main() -> None:
             output_root=Path(args.output_root),
             example_count=args.example_count,
         )
+        results.append(result)
         print(json.dumps(result, ensure_ascii=False, indent=2))
+
+    if len(results) > 1:
+        summary_paths = _write_batch_summary(
+            output_root=Path(args.output_root),
+            timeframe=args.timeframe,
+            results=results,
+        )
+        print(json.dumps(summary_paths, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":

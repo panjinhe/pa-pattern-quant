@@ -4,6 +4,12 @@ from datetime import datetime
 from typing import Any
 
 
+FREQUENCY_PASS_THRESHOLD = 0.75
+FREQUENCY_WATCH_THRESHOLD = 0.10
+SAMPLE_PASS_THRESHOLD = 100
+SAMPLE_WATCH_THRESHOLD = 40
+
+
 def _infer_bars_per_day(timeframe: str) -> float | None:
     normalized = (timeframe or "").strip().lower()
     if len(normalized) < 2:
@@ -114,9 +120,9 @@ def build_strategy_book_assessment(
 
     if opportunities_per_day is None:
         frequency_status = "待补充"
-    elif opportunities_per_day >= 1.0:
+    elif opportunities_per_day >= FREQUENCY_PASS_THRESHOLD:
         frequency_status = "通过"
-    elif opportunities_per_day >= 0.4:
+    elif opportunities_per_day >= FREQUENCY_WATCH_THRESHOLD:
         frequency_status = "观察"
     else:
         frequency_status = "不通过"
@@ -130,9 +136,9 @@ def build_strategy_book_assessment(
     else:
         baseline_status = "不通过"
 
-    if trade_count >= 120:
+    if trade_count >= SAMPLE_PASS_THRESHOLD:
         sample_status = "通过"
-    elif trade_count >= 60:
+    elif trade_count >= SAMPLE_WATCH_THRESHOLD:
         sample_status = "观察"
     else:
         sample_status = "不通过"
@@ -196,9 +202,9 @@ def build_strategy_book_assessment(
                 f"{_display_number(opportunities_per_day)} 次/天"
                 + (f"（signal_count={signal_count}）" if opportunities_per_day is not None else "")
             ),
-            ">= 1.00 次/天",
-            ">= 0.40 次/天",
-            "这里继续用 signal_count 近似 unfilter 机会数，方便 BTC / ETH / 合并统一口径。",
+            ">= 0.75 次/天",
+            ">= 0.10 次/天",
+            "v2.1 适度放宽频率门槛，降低早筛误杀率；这里继续用 signal_count 近似 unfilter 机会数，方便 BTC / ETH / 合并统一口径。",
         ),
         _metric(
             "baseline_performance",
@@ -218,9 +224,9 @@ def build_strategy_book_assessment(
             "样本充足性",
             sample_status,
             f"{trade_count} 笔 baseline 交易",
-            ">= 120 笔",
-            ">= 60 笔",
-            "单品种先看自己是否站得住，再谈合并结果。",
+            ">= 100 笔",
+            ">= 40 笔",
+            "v2.1 适度放宽样本门槛，优先减少早筛阶段对中低频策略的误杀。",
         ),
         _metric(
             "execution_readiness",

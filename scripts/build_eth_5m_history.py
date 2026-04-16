@@ -16,6 +16,7 @@ LOCAL_SOURCE_GLOB = (
     r"\interval=5m\year=*\month=*\data.parquet"
 )
 REMOTE_BASE_URL = "https://data.binance.vision/data/futures/um/monthly/klines/ETHUSDT/5m"
+DEFAULT_SYMBOL = "ETHUSDT"
 DEFAULT_OUTPUT = Path(
     r"E:\pa-pattern-quant\data\binance_um_perp\ETHUSDT\5m\ETHUSDT-5m-history.parquet"
 )
@@ -65,7 +66,12 @@ class YearMonth:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Build a consolidated ETHUSDT 5m history file from Binance monthly archives and local Skygarden parquet."
+        description="Build a consolidated 5m history file from Binance monthly archives and local Skygarden parquet."
+    )
+    parser.add_argument(
+        "--symbol",
+        default=DEFAULT_SYMBOL,
+        help="Symbol used to compose remote monthly archive filenames.",
     )
     parser.add_argument(
         "--start-month",
@@ -168,13 +174,13 @@ def normalize_local_partitions(source_glob: str) -> pl.DataFrame:
     )
 
 
-def remote_url(base_url: str, month: YearMonth) -> str:
-    stem = f"ETHUSDT-5m-{month}"
+def remote_url(base_url: str, month: YearMonth, symbol: str) -> str:
+    stem = f"{symbol}-5m-{month}"
     return f"{base_url}/{stem}.zip"
 
 
-def download_remote_month(base_url: str, month: YearMonth) -> pl.DataFrame:
-    url = remote_url(base_url, month)
+def download_remote_month(base_url: str, month: YearMonth, symbol: str) -> pl.DataFrame:
+    url = remote_url(base_url, month, symbol)
     try:
         with urlopen(url, timeout=60) as response:
             payload = response.read()
@@ -218,7 +224,7 @@ def build_history(args: argparse.Namespace) -> pl.DataFrame:
     remote_frames: list[pl.DataFrame] = []
     for month in remote_months:
         print(f"downloading {month} ...")
-        remote_frames.append(download_remote_month(args.remote_base_url, month))
+        remote_frames.append(download_remote_month(args.remote_base_url, month, args.symbol))
 
     combined = pl.concat([*remote_frames, local_df], how="vertical_relaxed")
     return combined.unique(subset=["open_time"], keep="last").sort("open_time")
